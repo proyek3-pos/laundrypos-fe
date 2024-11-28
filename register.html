@@ -19,10 +19,10 @@
                 class="img-fluid" alt="Sample image">
             </div>
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-              <form>
+              <form id="registerForm">
                 <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                   <p class="lead fw-normal mb-0 me-3">Sign up with</p>
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-floating mx-1">
+                  <button type="button" class="btn btn-primary btn-floating mx-1">
                     <i class="fab fa-whatsapp"></i>
                   </button>
                 </div>
@@ -30,61 +30,37 @@
                 <div class="divider d-flex align-items-center my-4">
                   <p class="text-center fw-bold mx-3 mb-0">Or</p>
                 </div>
+
+                <!-- Name input -->
+                <div class="form-outline mb-4">
+                    <input type="text" id="name" class="form-control form-control-lg" placeholder="Enter your name" required />
+                    <label class="form-label" for="name">Name</label>
+                </div>
       
                 <!-- Email input -->
-                <div data-mdb-input-init class="form-outline mb-4">
-                    <input type="email" id="form3Example3" class="form-control form-control-lg"
-                        placeholder="Enter your email or username" required />
-                    <label class="form-label" for="form3Example3">Email or Username</label>
+                <div class="form-outline mb-4">
+                    <input type="username" id="username" class="form-control form-control-lg" placeholder="Enter your username" required />
+                    <label class="form-label" for="username">Username</label>
                 </div>
-                
-                <div data-mdb-input-init class="form-outline mb-3">
-                    <input type="password" id="form3Example4" class="form-control form-control-lg"
-                        placeholder="Enter your password" required />
-                    <label class="form-label" for="form3Example4">Password</label>
+      
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <input type="password" id="password" class="form-control form-control-lg" placeholder="Enter your password" required />
+                    <label class="form-label" for="password">Password</label>
                 </div>
       
                 <div class="text-center text-lg-start mt-4 pt-2">
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg"
+                  <button type="submit" class="btn btn-primary btn-lg"
                     style="padding-left: 2.5rem; padding-right: 2.5rem;">Register</button>
                   <p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="login.html"
-                      class="link-primart">Login</a></p>
-                      <p class="small fw-bold mt-2 pt-1 mb-0">
-                        <a href="index.html" class="link-primary btn-back-dashboard">
-                            <i class="bi bi-arrow-left-circle me-2"></i>Back to Dashboard
-                        </a>
-                    </p>   
+                      class="link-primary">Login</a></p>
+                  <button id="back-btn" class="btn btn-secondary btn-lg">Back to Main Menu</button>
                 </div>
-      
               </form>
             </div>
           </div>
         </div>
-        <div
-          class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-          <!-- Copyright -->
-          <div class="text-white mb-3 mb-md-0">
-            Copyright © 2024. All rights reserved.
-          </div>
-          <!-- Copyright -->
-      
-          <!-- Right -->
-          <div>
-            <a href="#!" class="text-white me-4">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="#!" class="text-white me-4">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a href="#!" class="text-white me-4">
-              <i class="fab fa-google"></i>
-            </a>
-            <a href="https://github.com/proyek3-pos" class="text-white">
-              <i class="fab fa-github"></i>
-            </a>
-          </div>
-          <!-- Right -->
-        </div>
       </section>
-</body>
+      <script src="static/js/register.js"></script>
+    </body>
 </html>
