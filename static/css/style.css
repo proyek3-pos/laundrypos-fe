@@ -164,7 +164,7 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-  background-image: url('/laundrypos-fe/static/img/image.png');
+  background-image: url('../img/image.png');
   height: 100vh;
   display: flex;
   flex-direction: column;
