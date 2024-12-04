@@ -18,7 +18,7 @@ body {
 
 .logo {
   cursor: pointer;
-  background-image: url('/static/img/logo.png');
+  background-image: url('static/img/logo.png');
 }
 
 a {
@@ -165,7 +165,7 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-  background-image: url('/static/img/image.png');
+  background-image: url('static/img/image.png');
   height: 100vh;
   display: flex;
   flex-direction: column;
