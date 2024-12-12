@@ -5,4 +5,58 @@ flex: 1;
 height: 1px;
 background: #eee;
 }
+.h-custom {
+height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+.h-custom {
+height: 100%;
+}
+}   
 
+.btn-back-dashboard {
+    font-size: 1rem;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    color: #007bff; /* Bootstrap primary color */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+.btn-back-dashboard:hover {
+    color: #0056b3; /* Bootstrap primary hover color */
+    transform: translateX(-3px); /* Sedikit gerakan ke kiri */
+    text-decoration: underline;
+}
+.btn-back-dashboard i {
+    font-size: 1.2rem;
+}
+
+.link-primary {
+    color: #007bff; /* Warna utama Bootstrap */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+.link-primary:hover {
+    color: #0056b3; /* Warna hover */
+    text-decoration: underline;
+}
+
+/* Tambahkan Efek Hover pada Tombol Register */
+.btn-primary {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Gambar */
+img.img-fluid {
+    max-width: 100%;
+    height: auto;
+}

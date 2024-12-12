@@ -40,3 +40,8 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         alert('Error occurred: ' + err.message);
     }
 });
+
+document.getElementById('back-btn').addEventListener('click', function (e) {
+    e.preventDefault(); // Mencegah default button behavior
+    window.location.href = 'index.html'; // Redirect ke halaman LP.html
+});
