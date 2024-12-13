@@ -164,7 +164,7 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-  background-image: url('/static/img/image.jpg');
+  background-image: url('../img/ap.jpg');
   height: 100vh;
   display: flex;
   flex-direction: column;
