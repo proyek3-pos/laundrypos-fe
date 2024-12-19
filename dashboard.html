@@ -94,18 +94,19 @@
         .then(response => {
             if (response.ok) {
                 console.log('Logout berhasil');
-                // Hapus token dari localStorage atau sessionStorage
-                localStorage.removeItem('token'); // Jika menggunakan localStorage
-                sessionStorage.removeItem('token'); // Jika menggunakan sessionStorage
-                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Jika menggunakan cookies
-                window.location.href = '/login.html'; // Redirect ke halaman login
+                // Hapus token dari semua lokasi penyimpanan
+                localStorage.removeItem('token'); 
+                sessionStorage.removeItem('token'); 
+                document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+                
+                // Redirect ke halaman login
+                window.location.href = '/login.html';
             } else {
-                console.error('Logout gagal');
+                console.error('Logout gagal', response.statusText);
             }
         })
         .catch(error => console.error('Error:', error));
 });
-
 
 </script>
 </body>
