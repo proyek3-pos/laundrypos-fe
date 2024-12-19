@@ -18,7 +18,7 @@
         <a href="customer.html"><i class="fa fa-users"></i> Customers</a>
         <a href="reports.html"><i class="fa fa-chart-line"></i> Reports</a>
         <a href="#settings"><i class="fa fa-cogs"></i> Settings</a>
-        <a href="#logout" class="logout"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        <a href="index.html" class="logout"><i class="fa fa-sign-out-alt"></i> Logout</a>
     </div>
 
     <!-- Content -->
@@ -82,6 +82,31 @@
         sidebar.classList.toggle('hidden');
         document.querySelector('.content').classList.toggle('full-width');
     });
+
+    document.querySelector('.logout').addEventListener('click', () => {
+    fetch('/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Logout berhasil');
+                // Hapus token dari localStorage atau sessionStorage
+                localStorage.removeItem('token'); // Jika menggunakan localStorage
+                sessionStorage.removeItem('token'); // Jika menggunakan sessionStorage
+                document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Jika menggunakan cookies
+                window.location.href = '/login.html'; // Redirect ke halaman login
+            } else {
+                console.error('Logout gagal');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+
 </script>
 </body>
 </html>

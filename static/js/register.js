@@ -19,7 +19,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     };
 
     try {
-        const response = await fetch('http://localhost:8082/register', {
+        const response = await fetch('https://laundry-pos-ten.vercel.app/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
