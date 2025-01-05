@@ -62,10 +62,32 @@ body {
         transform: translateX(-100%);
         position: absolute;
         z-index: 9999;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar.visible {
+        transform: translateX(0);
     }
 
     .content {
         margin-left: 0;
         width: 100%;
     }
+}
+
+#closeSidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-size: 20px;
+}
+
+/* CSS untuk tautan aktif */
+.sidebar a.active {
+    background-color: #495057; /* Warna biru untuk aktif */
+    color: white; /* Ganti warna teks menjadi putih */
 }

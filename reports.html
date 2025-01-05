@@ -12,6 +12,7 @@
 <div class="d-flex">
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
+        <button id="closeSidebar" class="btn btn-light d-lg-none">X</button>
         <h4 class="text-center py-3">Laundry POS</h4>
         <a href="dashboard.html"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
         <a href="orders.html"><i class="fa fa-shopping-cart"></i> Orders</a>
@@ -122,14 +123,6 @@
 
 </script>
 
-<script>
-    const sidebar = document.getElementById('sidebar');
-    const toggleSidebar = document.getElementById('toggleSidebar');
-
-    toggleSidebar.addEventListener('click', () => {
-        sidebar.classList.toggle('hidden');
-        document.querySelector('.content').classList.toggle('full-width');
-    }); 
-</script>
+<script src="static/js/reports.js"></script>
 </body>
 </html>
