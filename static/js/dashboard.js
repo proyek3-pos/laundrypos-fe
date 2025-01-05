@@ -62,8 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
                             Swal.fire('Logout Berhasil!', 'Anda telah keluar.', 'success');
-                            setTimeout(() => window.location.href = '/index.html', 1500);
-                        } else {
+                            let baseURL = window.location.hostname === '127.0.0.1' ? '' : '/laundrypos-fe';
+                            setTimeout(() => window.location.href = `/laundrypos-fe`, 1500);
+                            } else {
                             Swal.fire('Error', 'Gagal logout, coba lagi.', 'error');
                         }
                     })

@@ -36,9 +36,8 @@ body {
 }
 
 .sidebar .logout {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
-    left: 15px;
     width: 100%;
 }
 
@@ -84,10 +83,4 @@ body {
     background-color: transparent;
     color: white;
     font-size: 20px;
-}
-
-/* CSS untuk tautan aktif */
-.sidebar a.active {
-    background-color: #495057; /* Warna biru untuk aktif */
-    color: white; /* Ganti warna teks menjadi putih */
 }

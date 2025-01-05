@@ -1,0 +1,118 @@
+body {
+    background-color: #f8f9fa;
+    overflow-x: hidden; /* Mencegah scroll horizontal */
+    margin: 0; /* Menghapus margin default pada body */
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 10px;
+}
+
+.navbar {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar {
+    background: #343a40;
+    color: white;
+    min-height: 100vh;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    overflow-y: auto; /* Agar sidebar bisa discroll jika terlalu banyak konten */
+    overflow-x: hidden; /* Mencegah scroll horizontal */
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar a {
+    display: block;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background: #495057;
+}
+
+.sidebar .logout {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+}
+
+.content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    padding-top: 20px; /* Memberikan jarak antara navbar dan konten */
+    overflow-y: auto; /* Menambahkan scroll untuk konten jika diperlukan */
+    height: 100vh; /* Mengatur tinggi konten agar bisa di-scroll */
+}
+
+.sidebar.hidden {
+    transform: translateX(-100%);
+}
+
+.content.full-width {
+    margin-left: 0;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        position: absolute;
+        z-index: 9999;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar.visible {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        width: 100%;
+        height: auto; /* Mengatur tinggi konten untuk tampilan mobile */
+    }
+}
+
+#closeSidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-size: 20px;
+}
+
+@media (max-width: 768px) {
+    .table-responsive thead { display: none; }
+    .table-responsive tr { display: block; margin-bottom: 15px; border: 1px solid #dee2e6; }
+    .table-responsive td { display: block; text-align: left; padding-left: 50%; position: relative; }
+    .table-responsive td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: calc(50% - 10px);
+        font-weight: bold;
+        text-align: left;
+    }
+}
+
+.swal2-container {
+    z-index: 2000 !important; /* Meningkatkan z-index untuk SweetAlert2 agar tidak terhalang sidebar */
+}
+
+[inert] {
+    pointer-events: none; /* Menonaktifkan klik */
+    user-select: none; /* Mencegah seleksi teks */
+    opacity: 0.5; /* Opsional: Efek visual untuk menunjukkan tidak aktif */
+}

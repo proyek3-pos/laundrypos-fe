@@ -179,26 +179,48 @@ window.deleteCustomer = deleteCustomer;
 
 
 
-///sidebar
+/// Sidebar
 const sidebar = document.getElementById('sidebar');
 const toggleSidebar = document.getElementById('toggleSidebar');
 const closeSidebar = document.getElementById('closeSidebar');
+const content = document.querySelector('.content');
 
+// Fungsi untuk menyembunyikan sidebar
+function hideSidebar() {
+    sidebar.classList.add('hidden');
+    sidebar.classList.remove('visible');
+    content.classList.add('full-width');
+    sidebar.setAttribute('inert', ''); // Mencegah fokus dan interaksi
+    document.activeElement.blur(); // Hapus fokus dari elemen sidebar
+    toggleSidebar.focus(); // Alihkan fokus ke tombol toggle
+}
+
+// Fungsi untuk menampilkan sidebar
+function showSidebar() {
+    sidebar.classList.remove('hidden');
+    sidebar.classList.add('visible');
+    content.classList.remove('full-width');
+    sidebar.removeAttribute('inert'); // Aktifkan kembali interaksi
+    closeSidebar.focus(); // Fokus pada tombol close
+}
+
+// Event listener untuk tombol toggle
 toggleSidebar.addEventListener('click', () => {
-sidebar.classList.toggle('hidden');
-sidebar.classList.toggle('visible');
-document.querySelector('.content').classList.toggle('full-width');
+    if (sidebar.classList.contains('hidden')) {
+        showSidebar();
+    } else {
+        hideSidebar();
+    }
 });
 
-closeSidebar.addEventListener('click', () => {
-sidebar.classList.toggle('hidden');
-sidebar.classList.toggle('visible');
-document.querySelector('.content').classList.toggle('full-width');
-});
+// Event listener untuk tombol close
+closeSidebar.addEventListener('click', hideSidebar);
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.querySelector('.logout');
+    const sidebar = document.getElementById('sidebar'); // Ambil sidebar
 
     if (logoutButton) {
         logoutButton.addEventListener('click', (event) => {
@@ -215,6 +237,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Tutup sidebar secara otomatis sebelum logout
+                    sidebar.classList.add('hidden');
+
                     // Cek token yang tersimpan di localStorage/sessionStorage
                     let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
                     
