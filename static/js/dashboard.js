@@ -2,18 +2,18 @@ const sidebar = document.getElementById('sidebar');
 const toggleSidebar = document.getElementById('toggleSidebar');
 const closeSidebar = document.getElementById('closeSidebar');
 
+// Toggle sidebar on and off
 toggleSidebar.addEventListener('click', () => {
-sidebar.classList.toggle('hidden');
-sidebar.classList.toggle('visible');
-document.querySelector('.content').classList.toggle('full-width');
+    sidebar.classList.toggle('hidden');
+    sidebar.classList.toggle('visible');
+    document.querySelector('.content').classList.toggle('full-width');
 });
 
 closeSidebar.addEventListener('click', () => {
-sidebar.classList.toggle('hidden');
-sidebar.classList.toggle('visible');
-document.querySelector('.content').classList.toggle('full-width');
+    sidebar.classList.toggle('hidden');
+    sidebar.classList.toggle('visible');
+    document.querySelector('.content').classList.toggle('full-width');
 });
-
 
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.querySelector('.logout');
@@ -64,11 +64,18 @@ document.addEventListener("DOMContentLoaded", () => {
                             Swal.fire('Logout Berhasil!', 'Anda telah keluar.', 'success');
                             let baseURL = window.location.hostname === '127.0.0.1' ? '' : '/laundrypos-fe';
                             setTimeout(() => window.location.href = `/laundrypos-fe`, 1500);
-                            } else {
+                        } else {
                             Swal.fire('Error', 'Gagal logout, coba lagi.', 'error');
                         }
                     })
                     .catch(error => Swal.fire('Error', 'Terjadi kesalahan saat logout.', 'error'));
+                } else {
+                    // Jika batal logout, tampilkan kembali sidebar jika di mode responsif
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('hidden');
+                        sidebar.classList.add('visible');
+                        document.querySelector('.content').classList.remove('full-width');
+                    }
                 }
             });
         });
@@ -77,8 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
-
+// Set the active page in the sidebar
 document.addEventListener("DOMContentLoaded", () => {
     // Dapatkan nama halaman saat ini
     const currentPage = window.location.pathname.split('/').pop(); // Mengambil nama file dari URL

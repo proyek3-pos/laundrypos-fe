@@ -78,8 +78,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     })
                     .catch(error => Swal.fire('Error', 'Terjadi kesalahan saat logout.', 'error'));
-                }
-            });
+                } else {
+                    // Jika batal logout, tampilkan kembali sidebar jika di mode responsif
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('hidden');
+                        sidebar.classList.add('visible');
+                        document.querySelector('.content').classList.remove('full-width');
+                    }
+                }            });
         });
     } else {
         console.log('logoutButton element not found');

@@ -12,7 +12,7 @@ body {
 
 .navbar {
     background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar {
@@ -54,6 +54,10 @@ body {
     height: 100vh; /* Mengatur tinggi konten agar bisa di-scroll */
 }
 
+.content.shifted {
+    margin-left: 0;
+}
+
 .sidebar.hidden {
     transform: translateX(-100%);
 }
@@ -78,7 +82,6 @@ body {
     .content {
         margin-left: 0;
         width: 100%;
-        height: auto; /* Mengatur tinggi konten untuk tampilan mobile */
     }
 }
 
@@ -116,3 +119,19 @@ body {
     user-select: none; /* Mencegah seleksi teks */
     opacity: 0.5; /* Opsional: Efek visual untuk menunjukkan tidak aktif */
 }
+
+        /* Custom styles */
+        .sidebar {
+            width: 250px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }

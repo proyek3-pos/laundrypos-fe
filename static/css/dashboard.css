@@ -1,5 +1,7 @@
 body {
     background-color: #f8f9fa;
+    overflow-x: hidden; /* Mencegah scroll horizontal */
+    margin: 0; /* Menghapus margin default pada body */
 }
 
 .card {
@@ -10,7 +12,7 @@ body {
 
 .navbar {
     background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar {
@@ -19,9 +21,12 @@ body {
     min-height: 100vh;
     width: 250px;
     position: fixed;
-    transition: transform 0.3s ease-in-out;
-    transform: translateX(0);
+    top: 0;
+    left: 0;
     z-index: 1000;
+    overflow-y: auto; /* Agar sidebar bisa discroll jika terlalu banyak konten */
+    overflow-x: hidden; /* Mencegah scroll horizontal */
+    transition: transform 0.3s ease-in-out;
 }
 
 .sidebar a {
@@ -36,7 +41,7 @@ body {
 }
 
 .sidebar .logout {
-    position: fixed;
+    position: absolute;
     bottom: 20px;
     width: 100%;
 }
@@ -44,7 +49,13 @@ body {
 .content {
     margin-left: 250px;
     width: calc(100% - 250px);
-    transition: margin-left 0.3s ease-in-out;
+    padding-top: 20px; /* Memberikan jarak antara navbar dan konten */
+    overflow-y: auto; /* Menambahkan scroll untuk konten jika diperlukan */
+    height: 100vh; /* Mengatur tinggi konten agar bisa di-scroll */
+}
+
+.content.shifted {
+    margin-left: 0;
 }
 
 .sidebar.hidden {
@@ -84,3 +95,19 @@ body {
     color: white;
     font-size: 20px;
 }
+
+        /* Custom styles */
+        .sidebar {
+            width: 250px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
