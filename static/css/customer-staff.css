@@ -1,0 +1,78 @@
+body {
+    background-color: #f4f7fc;
+    font-family: 'Arial', sans-serif;
+}
+.card {
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+.card-header {
+    border-radius: 15px 15px 0 0;
+    background-color: #00224D;
+    color: white;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+}
+.btn-action {
+    font-size: 14px;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+.btn-action i {
+    margin-right: 5px;
+}
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+.table thead th {
+    background-color: #D6EFD8;
+    color: black;
+}
+.table thead th, .table td {
+    padding: 12px 15px;
+}
+.card-body {
+    background-color: #ffffff;
+    border-radius: 0 0 15px 15px;
+}
+.card-footer {
+    background-color: #f9f9f9;
+    border-radius: 0 0 15px 15px;
+    text-align: center;
+}
+.btn {
+    border-radius: 20px;
+}
+.pagination {
+    justify-content: center;
+}
+.logout-btn {
+    font-size: 14px;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+.form-label {
+    font-weight: 500;
+}
+.form-control {
+    border-radius: 10px;
+}
+.btn-primary, .btn-secondary {
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+.form-card-body {
+    background-color: #ffffff;
+    border-radius: 0 0 15px 15px;
+}
