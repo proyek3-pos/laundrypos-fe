@@ -56,9 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     })
                     .then(response => {
                         if (response.ok) {
-                            // Hapus token dan lakukan redirect
+                            // Hapus token, userRole, dan cookie
                             localStorage.removeItem('authToken');
+                            localStorage.removeItem('userRole');
                             sessionStorage.removeItem('authToken');
+                            sessionStorage.removeItem('userRole');
                             document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
                             Swal.fire('Logout Berhasil!', 'Anda telah keluar.', 'success');

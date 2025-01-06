@@ -56,15 +56,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     })
                     .then(response => {
                         if (response.ok) {
-                            // Hapus token dan lakukan redirect
+                            // Hapus token, userRole, dan cookie
                             localStorage.removeItem('authToken');
+                            localStorage.removeItem('userRole');
                             sessionStorage.removeItem('authToken');
+                            sessionStorage.removeItem('userRole');
                             document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
                             Swal.fire('Logout Berhasil!', 'Anda telah keluar.', 'success');
                             let baseURL = window.location.hostname === '127.0.0.1' ? '' : '/laundrypos-fe';
                             setTimeout(() => window.location.href = `/laundrypos-fe`, 1500);
-                            } else {
+                        } else {
                             Swal.fire('Error', 'Gagal logout, coba lagi.', 'error');
                         }
                     })
@@ -76,7 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         sidebar.classList.add('visible');
                         document.querySelector('.content').classList.remove('full-width');
                     }
-                }            });
+                }
+            });
         });
     } else {
         console.log('logoutButton element not found');
