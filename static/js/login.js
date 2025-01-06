@@ -29,7 +29,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             if (result.role === 'admin') {
                 window.location.href = 'dashboard.html';
             } else if (result.role === 'staff') {
-                window.location.href = 'pos.html';
+                window.location.href = 'customer-staff.html';
             } else {
                 alert('Unknown role, please contact administrator!');
             }
