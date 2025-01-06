@@ -16,11 +16,15 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         const response = await fetch('https://laundry-pos-ten.vercel.app/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(credentials),
-            credentials: 'include' // Penting untuk mengirimkan cookie di HTTPS
+            credentials: 'include', // Mengizinkan pengiriman token
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
         });
+        
         
 
         if (response.ok) {
