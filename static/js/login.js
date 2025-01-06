@@ -16,14 +16,27 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         const response = await fetch('https://laundry-pos-ten.vercel.app/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            credentials: 'include', // Mengizinkan pengiriman token
             body: JSON.stringify({
-                username: username,
-                password: password
-            })
+                username: 'example',
+                password: 'password123',
+            }),
+            credentials: 'include' // Pastikan menyertakan kredensial
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
+        
         
         
 
