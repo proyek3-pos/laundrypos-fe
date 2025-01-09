@@ -141,29 +141,53 @@ async function deleteCustomer(customerId) {
 // Fungsi untuk menampilkan data pelanggan di tabel
 async function displayCustomers() {
     const customers = await getCustomers();
-    console.log('Customers:', customers); // Debugging: pastikan atribut ID terlihat dengan nama yang benar
+    console.log('Customers:', customers);
 
     orderTableBody.innerHTML = "";
 
     customers.forEach(customer => {
-        console.log('Customer:', customer); // Debugging
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${customer.fullName}</td>
             <td>${customer.phoneNumber}</td>
             <td>${customer.email}</td>
             <td>
-            <button class="btn btn-sm btn-warning" onclick="editCustomer('${customer.id}')">
-                <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="deleteCustomer('${customer.id}')">
-                <i class="fas fa-trash"></i>
-            </button>
+                <button class="btn btn-sm btn-warning edit-btn">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-danger delete-btn">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="btn btn-sm btn-primary laundry-btn">
+                    <i class="fas fa-shopping-cart"></i> Laundry
+                </button>
             </td>
         `;
+
+        const editButton = row.querySelector('.edit-btn');
+        const deleteButton = row.querySelector('.delete-btn');
+        const laundryButton = row.querySelector('.laundry-btn');
+
+        editButton.addEventListener('click', () => editCustomer(customer.id));
+        deleteButton.addEventListener('click', () => deleteCustomer(customer.id));
+        laundryButton.addEventListener('click', () => navigateToPOS(customer.id));
+
         orderTableBody.appendChild(row);
     });
 }
+
+
+
+function navigateToPOS(customerId) {
+    if (!customerId) {
+        Swal.fire('Error', 'ID pelanggan tidak ditemukan', 'error');
+        return;
+    }
+    // Arahkan ke halaman POS dengan parameter ID pelanggan
+    // window.location.href = `/laundrypos-fe/pos?customerId=${customerId}`;
+    window.location.href = `pos.html?customerId=${customerId}`;
+}
+    
 
 // Event listener untuk menambahkan pelanggan
 saveButton.addEventListener("click", addCustomer);
