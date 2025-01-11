@@ -85,6 +85,9 @@ orderButton.addEventListener('click', function () {
         return;
     }
 
- // Redirect ke halaman pembayaran dengan query params
-window.location.href = `payment.html?customerId=${customerId}&price=${totalPrice}`;
+    // Buat transaction_id unik (contoh: menggunakan timestamp)
+    const transactionId = `txn-${Date.now()}`;
+
+    // Redirect ke halaman pembayaran dengan query params
+    window.location.href = `payment.html?customerId=${customerId}&price=${totalPrice}&transaction_id=${transactionId}`;
 });
