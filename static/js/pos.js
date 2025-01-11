@@ -1,22 +1,20 @@
-// static/js/pos.js
-
+// Fungsi untuk mengambil query parameter dari URL
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
 }
 
 // Ambil `customerId` dari query parameter
-const customerId = getQueryParam('customerId'); // Pastikan namanya sesuai
-console.log('Customer ID:', customerId); // Debugging
+const customerId = getQueryParam('customerId');
+console.log('Customer ID:', customerId);
 
-
-
+// Fungsi untuk mengambil data pelanggan berdasarkan ID
 async function fetchCustomerById(customerId) {
     try {
         const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`);
         if (!response.ok) throw new Error('Gagal mengambil data pelanggan');
         const customer = await response.json();
-        console.log('Customer Data:', customer); // Debugging: Periksa apakah data pelanggan benar
+        console.log('Customer Data:', customer);
         return customer;
     } catch (error) {
         console.error(error);
@@ -25,7 +23,7 @@ async function fetchCustomerById(customerId) {
     }
 }
 
-
+// Fungsi untuk menginisialisasi POS dan memuat data pelanggan
 async function initializePOS() {
     if (customerId) {
         const customer = await fetchCustomerById(customerId);
@@ -39,13 +37,12 @@ async function initializePOS() {
 // Panggil fungsi saat halaman dimuat
 document.addEventListener('DOMContentLoaded', initializePOS);
 
-
 // Harga per layanan (per kg) dalam Rupiah
 const servicePrices = {
     cuci: 5000,                    // Harga per kg untuk Cuci
-    cuci_kering: 6000,            // Harga per kg untuk Cuci Kering
-    setrika: 7000,                 // Harga per kg untuk Setrika
-    cuci_cuci_kering: 10000,       // Harga per kg untuk Cuci + Cuci Kering
+    cuci_kering: 6000,              // Harga per kg untuk Cuci Kering
+    setrika: 7000,                  // Harga per kg untuk Setrika
+    cuci_cuci_kering: 10000,        // Harga per kg untuk Cuci + Cuci Kering
     cuci_cuci_kering_setrika: 16000 // Harga per kg untuk Cuci + Cuci Kering + Setrika
 };
 
@@ -55,7 +52,7 @@ const weight = document.getElementById('weight');
 const price = document.getElementById('price');
 const orderButton = document.getElementById('orderButton');
 
-// Fungsi untuk menghitung harga otomatis
+// Fungsi untuk menghitung harga otomatis berdasarkan layanan yang dipilih dan berat
 function calculatePrice() {
     const selectedService = serviceType.value;
     const weightValue = parseFloat(weight.value);
@@ -68,14 +65,20 @@ function calculatePrice() {
     }
 }
 
-// Tambahkan event listener
+// Tambahkan event listener untuk menghitung harga otomatis saat jenis layanan atau berat berubah
 serviceType.addEventListener('change', calculatePrice);
 weight.addEventListener('input', calculatePrice);
 
-// Fungsi untuk navigasi ke halaman pembayaran
+// Fungsi untuk menghasilkan ID unik berbasis timestamp
+function createTransactionId() {
+    // Hanya menggunakan timestamp untuk ID unik
+    return Date.now().toString(); // ID berbasis waktu dalam milidetik
+}
+
+// Fungsi untuk navigasi ke halaman pembayaran saat orderButton diklik
 orderButton.addEventListener('click', function () {
     // Ambil nilai dari form
-    const customerName = document.getElementById('customerName').value; // Ambil dari input form
+    const customerName = document.getElementById('customerName').value;
     const selectedService = serviceType.value;
     const weightValue = parseFloat(weight.value);
     const totalPrice = servicePrices[selectedService] * weightValue;
@@ -85,9 +88,9 @@ orderButton.addEventListener('click', function () {
         return;
     }
 
-    // Buat transaction_id unik (contoh: menggunakan timestamp)
-    const transactionId = `txn-${Date.now()}`;
+    // Buat transactionId unik
+    const transactionId = createTransactionId();  // ID berbasis timestamp, tanpa awalan 'txn-'
 
     // Redirect ke halaman pembayaran dengan query params
-    window.location.href = `payment.html?customerId=${customerId}&price=${totalPrice}&transaction_id=${transactionId}`;
+    window.location.href = `payment.html?customerId=${customerId}&price=${totalPrice}&transactionId=${transactionId}`;
 });
