@@ -1,5 +1,45 @@
 // static/js/pos.js
 
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Ambil `customerId` dari query parameter
+const customerId = getQueryParam('customerId'); // Pastikan namanya sesuai
+console.log('Customer ID:', customerId); // Debugging
+
+
+
+async function fetchCustomerById(customerId) {
+    try {
+        const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`);
+        if (!response.ok) throw new Error('Gagal mengambil data pelanggan');
+        const customer = await response.json();
+        console.log('Customer Data:', customer); // Debugging: Periksa apakah data pelanggan benar
+        return customer;
+    } catch (error) {
+        console.error(error);
+        alert('Terjadi kesalahan saat mengambil data pelanggan!');
+        return null;
+    }
+}
+
+
+async function initializePOS() {
+    if (customerId) {
+        const customer = await fetchCustomerById(customerId);
+        if (customer) {
+            // Isi form dengan data pelanggan
+            document.getElementById('customerName').value = customer.fullName;
+        }
+    }
+}
+
+// Panggil fungsi saat halaman dimuat
+document.addEventListener('DOMContentLoaded', initializePOS);
+
+
 // Harga per layanan (per kg) dalam Rupiah
 const servicePrices = {
     cuci: 5000,                    // Harga per kg untuk Cuci
@@ -45,6 +85,6 @@ orderButton.addEventListener('click', function () {
         return;
     }
 
-    // Redirect ke halaman pembayaran dengan query params
-    window.location.href = `payment.html?customerName=${customerName}&price=${totalPrice}`;
+ // Redirect ke halaman pembayaran dengan query params
+window.location.href = `payment.html?customerId=${customerId}&price=${totalPrice}`;
 });
