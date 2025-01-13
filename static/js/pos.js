@@ -23,7 +23,25 @@ async function fetchCustomerById(customerId) {
     }
 }
 
-// Fungsi untuk menginisialisasi POS dan memuat data pelanggan
+// Fungsi untuk mengambil daftar layanan dari API
+async function fetchServices() {
+    try {
+        const response = await fetch('https://laundry-pos-ten.vercel.app/services');
+        if (!response.ok) throw new Error('Gagal mengambil data layanan');
+        const services = await response.json();
+        console.log('Services Data:', services);
+        return services; // Mengembalikan data layanan
+    } catch (error) {
+        console.error(error);
+        alert('Terjadi kesalahan saat mengambil data layanan!');
+        return [];
+    }
+}
+
+// Variabel global untuk menyimpan data layanan
+let services = [];
+
+// Fungsi untuk menginisialisasi POS dan memuat data pelanggan serta layanan
 async function initializePOS() {
     if (customerId) {
         const customer = await fetchCustomerById(customerId);
@@ -32,19 +50,20 @@ async function initializePOS() {
             document.getElementById('customerName').value = customer.fullName;
         }
     }
+
+    // Mengambil dan memuat daftar layanan ke dropdown
+    services = await fetchServices();  // Menyimpan data layanan ke variabel global
+    const serviceSelect = document.getElementById('serviceType');
+    services.forEach(service => {
+        const option = document.createElement('option');
+        option.value = service.id; // ID layanan
+        option.textContent = service.serviceName; // Nama layanan
+        serviceSelect.appendChild(option); // Menambahkan option ke select
+    });
 }
 
 // Panggil fungsi saat halaman dimuat
 document.addEventListener('DOMContentLoaded', initializePOS);
-
-// Harga per layanan (per kg) dalam Rupiah
-const servicePrices = {
-    cuci: 5000,                    // Harga per kg untuk Cuci
-    cuci_kering: 6000,              // Harga per kg untuk Cuci Kering
-    setrika: 7000,                  // Harga per kg untuk Setrika
-    cuci_cuci_kering: 10000,        // Harga per kg untuk Cuci + Cuci Kering
-    cuci_cuci_kering_setrika: 16000 // Harga per kg untuk Cuci + Cuci Kering + Setrika
-};
 
 // Ambil elemen-elemen form
 const serviceType = document.getElementById('serviceType');
@@ -54,14 +73,26 @@ const orderButton = document.getElementById('orderButton');
 
 // Fungsi untuk menghitung harga otomatis berdasarkan layanan yang dipilih dan berat
 function calculatePrice() {
-    const selectedService = serviceType.value;
-    const weightValue = parseFloat(weight.value);
+    const selectedService = serviceType.value; // Ambil ID layanan yang dipilih
+    const weightValue = parseFloat(weight.value); // Ambil nilai berat dari input
 
     if (selectedService && weightValue > 0) {
-        const totalPrice = servicePrices[selectedService] * weightValue;
-        price.value = `Rp ${totalPrice.toLocaleString('id-ID')}`; // Format Rupiah
+        // Cek apakah layanan valid
+        const selectedServiceData = services.find(service => service.id === selectedService);
+        if (selectedServiceData) {
+            const totalPrice = selectedServiceData.unitPrice * weightValue;
+            price.value = `Rp ${totalPrice.toLocaleString('id-ID')}`; // Format Rupiah
+        } else {
+            price.value = ''; // Kosongkan jika layanan tidak ditemukan
+            alert('Layanan tidak valid!');
+        }
     } else {
         price.value = ''; // Kosongkan jika input tidak valid
+        if (!selectedService) {
+            alert('Harap pilih jenis layanan!');
+        } else if (isNaN(weightValue) || weightValue <= 0) {
+            alert('Harap masukkan berat yang valid!');
+        }
     }
 }
 
@@ -69,10 +100,9 @@ function calculatePrice() {
 serviceType.addEventListener('change', calculatePrice);
 weight.addEventListener('input', calculatePrice);
 
-// Fungsi untuk menghasilkan ID unik berbasis timestamp
+// Fungsi untuk menghasilkan ID transaksi dengan UUID
 function createTransactionId() {
-    // Hanya menggunakan timestamp untuk ID unik
-    return Date.now().toString(); // ID berbasis waktu dalam milidetik
+    return uuid.v4(); // Menghasilkan ID unik berbentuk string UUID
 }
 
 // Fungsi untuk navigasi ke halaman pembayaran saat orderButton diklik
@@ -81,15 +111,19 @@ orderButton.addEventListener('click', function () {
     const customerName = document.getElementById('customerName').value;
     const selectedService = serviceType.value;
     const weightValue = parseFloat(weight.value);
-    const totalPrice = servicePrices[selectedService] * weightValue;
 
+    // Cek apakah layanan dan berat valid
     if (!selectedService || isNaN(weightValue) || weightValue <= 0) {
         alert('Harap isi jenis layanan dan berat dengan benar!');
         return;
     }
 
-    // Buat transactionId unik
-    const transactionId = createTransactionId();  // ID berbasis timestamp, tanpa awalan 'txn-'
+    // Dapatkan harga per layanan dari layanan yang dipilih
+    const selectedServiceData = services.find(service => service.id === selectedService);
+    const totalPrice = selectedServiceData ? selectedServiceData.unitPrice * weightValue : 0;
+
+    // Buat transactionId unik dengan UUID
+    const transactionId = createTransactionId();  // ID berbasis UUID
 
     // Redirect ke halaman pembayaran dengan query params
     window.location.href = `payment.html?customerId=${customerId}&price=${totalPrice}&transactionId=${transactionId}`;
