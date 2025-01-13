@@ -9,7 +9,6 @@ async function fetchCustomerById(customerId) {
     console.log("Fetching data for customerId:", customerId);
     try {
         const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`);
-        console.log("Response status:", response.status);
         if (!response.ok) throw new Error('Gagal mengambil data pelanggan');
         const customer = await response.json();
         console.log("Customer data:", customer);
@@ -21,21 +20,43 @@ async function fetchCustomerById(customerId) {
     }
 }
 
+// Fungsi untuk mengambil data transaksi berdasarkan transactionId
+async function fetchTransactionById(transactionId) {
+    console.log("Fetching data for transactionId:", transactionId);
+    try {
+        const response = await fetch(`https://laundry-pos-ten.vercel.app/transaction-id?id=${transactionId}`);
+        if (!response.ok) throw new Error('Gagal mengambil data transaksi');
+        const transaction = await response.json();
+        console.log("Transaction data:", transaction);
 
+        // Debug detail items dan service
+        if (transaction.items) {
+            console.log("Transaction items:", transaction.items);
+            if (transaction.items.length > 0) {
+                console.log("First item details:", transaction.items[0]);
+                console.log("Service details:", transaction.items[0].service);
+            }
+        } else {
+            console.warn("Transaction does not contain items.");
+        }
+
+        return transaction;
+    } catch (error) {
+        console.error(error);
+        alert('Terjadi kesalahan saat mengambil data transaksi!');
+        return null;
+    }
+}
+
+// Fungsi untuk menginisialisasi form pembayaran
 async function initializePaymentForm() {
     const customerId = getQueryParam('customerId');
-    const price = getQueryParam('price');
-    const transactionId = getQueryParam('transactionId');  // Ganti 'transaction_id' dengan 'transactionId'
+    const transactionId = getQueryParam('transactionId');
 
-    // Debugging: Log query parameters
-    console.log("Query String:", window.location.search);
-    console.log("CustomerId:", customerId);
-    console.log("Price:", price);
-    console.log("TransactionId:", transactionId);
-
-    if (!customerId || !price || !transactionId) {
+    // Validasi parameter URL
+    if (!customerId || !transactionId) {
         alert('Data tidak lengkap. Pastikan semua parameter URL tersedia.');
-        window.history.back(); // Arahkan kembali jika parameter tidak lengkap
+        window.history.back();
         return;
     }
 
@@ -49,7 +70,23 @@ async function initializePaymentForm() {
         alert('Data pelanggan tidak ditemukan!');
     }
 
-    document.getElementById('gross_amount').value = price;
+    // Ambil data transaksi
+    const transaction = await fetchTransactionById(transactionId);
+    if (transaction) {
+        if (transaction.items && transaction.items.length > 0) {
+            const serviceDetails = transaction.items[0];
+            const serviceName = serviceDetails.service?.serviceName || 'Layanan tidak ditemukan';
+
+            document.getElementById('service').value = serviceName;
+            document.getElementById('weight').value = serviceDetails.quantity || 0;
+            document.getElementById('gross_amount').value = `Rp ${transaction.totalAmount.toLocaleString('id-ID')}`;
+            document.getElementById('transactionId').value = transactionId;
+        } else {
+            alert('Tidak ada item atau layanan dalam transaksi ini!');
+        }
+    } else {
+        alert('Data transaksi tidak ditemukan!');
+    }
 }
 
 // Panggil fungsi saat halaman dimuat
@@ -61,22 +98,9 @@ document.addEventListener('DOMContentLoaded', function () {
 document.getElementById("payment-form").addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const name = document.getElementById("customerName").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const grossAmount = parseFloat(document.getElementById("gross_amount").value.trim());
-    const transactionId = getQueryParam('transactionId'); // Ganti 'transaction_id' dengan 'transactionId'
-    const customerId = getQueryParam('customerId'); // Tetapkan dari query parameter
+    const transactionId = document.getElementById("transactionId").value;
 
-    // Debugging: Log transactionId
-    console.log("TransactionId during form submit:", transactionId);
-
-    if (!name || !email || !phone || isNaN(grossAmount) || grossAmount <= 0 || !transactionId) {
-        alert("Harap isi semua data dengan benar!");
-        return;
-    }
-
-    // Kirim data ke backend
+    // Lakukan proses pembayaran
     try {
         const response = await fetch('https://laundry-pos-ten.vercel.app/create-payment', {
             method: 'POST',
@@ -84,19 +108,26 @@ document.getElementById("payment-form").addEventListener("submit", async functio
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                transaction_id: transactionId,  // Gunakan 'transaction_id' untuk pengiriman data
-                customer_id: customerId,
-                gross_amount: grossAmount,
-                order_id: `order-${Date.now()}`,
-                customer: { name, email, phone },
+                transactionId: transactionId,
+                // payment_method: "Cash", // Contoh pembayaran dengan metode Cash
             }),
         });
-        if (!response.ok) throw new Error('Gagal membuat pembayaran');
+
+        if (!response.ok) throw new Error('Gagal memproses pembayaran');
+
         const result = await response.json();
         console.log("Payment result:", result);
-        alert("Pembayaran berhasil!");
+
+        // Redirect ke halaman snap_url jika tersedia
+        if (result.snap_url) {
+            alert("Pembayaran berhasil! Anda akan diarahkan ke halaman pembayaran.");
+            window.location.href = result.snap_url;
+        } else {
+            alert("Pembayaran berhasil tetapi tidak ada snap_url yang ditemukan!");
+        }
     } catch (error) {
         console.error('Error during payment process:', error);
         alert("Terjadi kesalahan: " + error.message);
     }
 });
+
