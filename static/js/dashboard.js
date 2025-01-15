@@ -99,3 +99,211 @@ document.addEventListener("DOMContentLoaded", () => {
         dashboardLink.classList.add('active'); // Menambahkan kelas 'active' untuk tautan dashboard
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Fetch the list of services
+    fetch('https://laundry-pos-ten.vercel.app/services')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#order-table tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            data.forEach(service => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${service.serviceName}</td>
+                    <td>${service.description}</td>
+                    <td>${service.unitPrice}</td>
+                    <td>${service.unit}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm edit-btn" data-id="${service.id}">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="${service.id}">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Add event listeners for edit and delete buttons
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', handleEdit);
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', handleDelete);
+            });
+        })
+        .catch(error => console.error('Error fetching services:', error));
+    
+    // Handle form submission
+    document.getElementById('save-btn').addEventListener('click', addService);
+});
+
+
+async function addService() {
+    const serviceName = document.getElementById('service-name').value.trim();
+    const serviceDescription = document.getElementById('description').value.trim();
+    const servicePrice = parseFloat(document.getElementById('price').value.trim());
+    const serviceWeight = document.getElementById('weight').value.trim();
+
+    if (!serviceName || !serviceDescription || isNaN(servicePrice) || !serviceWeight) {
+        Swal.fire('Peringatan', 'Semua field wajib diisi dengan benar!', 'warning');
+        return;
+    }
+
+    const newService = {
+        serviceName,
+        description: serviceDescription,
+        unitPrice: servicePrice,
+        unit: serviceWeight
+    };
+
+    try {
+        const response = await fetch('https://laundry-pos-ten.vercel.app/services', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newService)
+        });
+
+        if (!response.ok) throw new Error('Gagal menambahkan service');
+        Swal.fire('Sukses', 'Service berhasil ditambahkan!', 'success');
+        displayServices();
+        document.getElementById('service-form').reset();
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    }
+}
+
+async function handleEdit(event) {
+    const serviceId = event.target.getAttribute('data-id');
+    if (!serviceId) {
+        Swal.fire('Error', 'ID service tidak ditemukan', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`);
+        if (!response.ok) throw new Error('Gagal mengambil data service');
+
+        const service = await response.json();
+
+        const { value: formValues } = await Swal.fire({
+            title: 'Edit Data Service',
+            html: `
+                <input id="swal-name" class="swal2-input" value="${service.serviceName}" placeholder="Nama Service">
+                <input id="swal-description" class="swal2-input" value="${service.description}" placeholder="Deskripsi">
+                <input id="swal-price" class="swal2-input" value="${service.unitPrice}" placeholder="Harga">
+                <input id="swal-weight" class="swal2-input" value="${service.unit}" placeholder="Berat">
+            `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return {
+                    serviceName: document.getElementById('swal-name').value.trim(),
+                    description: document.getElementById('swal-description').value.trim(),
+                    unitPrice: parseFloat(document.getElementById('swal-price').value.trim()) || 0,
+                    unit: document.getElementById('swal-weight').value.trim(),
+                };
+            }
+        });
+
+        if (formValues) {
+            const updateResponse = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formValues)
+            });
+
+            if (!updateResponse.ok) {
+                const errorText = await updateResponse.text();
+                throw new Error(`Gagal memperbarui data service: ${errorText}`);
+            }
+
+            Swal.fire('Sukses', 'Data service diperbarui!', 'success');
+            displayServices();
+        }
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    }
+}
+    
+
+async function handleDelete(event) {
+    const serviceId = event.target.getAttribute('data-id');
+    if (!serviceId) {
+        Swal.fire('Error', 'ID service tidak ditemukan', 'error');
+        return;
+    }
+
+    try {
+        const result = await Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data service akan dihapus permanen!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        });
+
+        if (result.isConfirmed) {
+            const deleteResponse = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`, {
+                method: 'DELETE',
+            });
+
+            if (!deleteResponse.ok) {
+                const errorMessage = await deleteResponse.text();
+                Swal.fire('Error', errorMessage, 'error');
+                return;
+            }
+            
+            Swal.fire('Sukses', 'Data service berhasil dihapus!', 'success');
+            displayServices();
+        }
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    }
+}
+
+async function displayServices() {
+    try {
+        const response = await fetch('https://laundry-pos-ten.vercel.app/services');
+        if (!response.ok) throw new Error('Gagal mengambil data services');
+        const services = await response.json();
+
+        const tbody = document.querySelector('#order-table tbody');
+        tbody.innerHTML = ''; // Clear existing rows
+
+        services.forEach(service => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${service.serviceName}</td>
+                <td>${service.description}</td>
+                <td>${service.unitPrice}</td>
+                <td>${service.unit}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm edit-btn" data-id="${service.id}">Edit</button>
+                    <button class="btn btn-danger btn-sm delete-btn" data-id="${service.id}">Delete</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        // Add event listeners for edit and delete buttons
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', handleEdit);
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', handleDelete);
+        });
+    } catch (error) {
+        console.error(error);
+        Swal.fire('Error', error.message, 'error');
+    }
+}
+
+// Tampilkan services saat halaman dimuat
+document.addEventListener("DOMContentLoaded", displayServices);
