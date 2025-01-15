@@ -157,24 +157,40 @@ async function addService() {
         unit: serviceWeight
     };
 
-    try {
-        const response = await fetch('https://laundry-pos-ten.vercel.app/services', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newService)
-        });
+    // Konfirmasi sebelum menyimpan data
+    const result = await Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: 'Data service akan disimpan.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Simpan!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+    });
 
-        if (!response.ok) throw new Error('Gagal menambahkan service');
-        Swal.fire('Sukses', 'Service berhasil ditambahkan!', 'success');
-        displayServices();
-        document.getElementById('service-form').reset();
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
+    if (result.isConfirmed) {
+        try {
+            const response = await fetch('https://laundry-pos-ten.vercel.app/services', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newService)
+            });
+
+            if (!response.ok) throw new Error('Gagal menambahkan service');
+            Swal.fire('Sukses', 'Service berhasil ditambahkan!', 'success');
+            displayServices();
+            document.getElementById('service-form').reset();
+        } catch (error) {
+            console.error(error);
+            Swal.fire('Error', error.message, 'error');
+        }
+    } else {
+        Swal.fire('Batal', 'Data tidak disimpan.', 'info');
     }
 }
+
 
 async function handleEdit(event) {
     const serviceId = event.target.getAttribute('data-id');
