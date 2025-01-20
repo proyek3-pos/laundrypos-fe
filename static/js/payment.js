@@ -8,7 +8,12 @@ function getQueryParam(param) {
 async function fetchCustomerById(customerId) {
     console.log("Fetching data for customerId:", customerId);
     try {
-        const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`);
+        const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
+        const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Menambahkan token ke header Authorization
+            }
+        });
         if (!response.ok) throw new Error('Gagal mengambil data pelanggan');
         const customer = await response.json();
         console.log("Customer data:", customer);
@@ -24,7 +29,12 @@ async function fetchCustomerById(customerId) {
 async function fetchTransactionById(transactionId) {
     console.log("Fetching data for transactionId:", transactionId);
     try {
-        const response = await fetch(`https://laundry-pos-ten.vercel.app/transaction-id?id=${transactionId}`);
+        const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
+        const response = await fetch(`https://laundry-pos-ten.vercel.app/transaction-id?id=${transactionId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Menambahkan token ke header Authorization
+            }
+        });
         if (!response.ok) throw new Error('Gagal mengambil data transaksi');
         const transaction = await response.json();
         console.log("Transaction data:", transaction);
@@ -102,10 +112,12 @@ document.getElementById("payment-form").addEventListener("submit", async functio
 
     // Lakukan proses pembayaran
     try {
+        const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
         const response = await fetch('https://laundry-pos-ten.vercel.app/create-payment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Menambahkan token ke header Authorization
             },
             body: JSON.stringify({
                 transactionId: transactionId,

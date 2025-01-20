@@ -11,8 +11,14 @@ console.log("Customer ID:", customerId);
 // Fungsi untuk mengambil data pelanggan berdasarkan ID
 async function fetchCustomerById(customerId) {
   try {
+    const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
     const response = await fetch(
-      `https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`
+      `https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}` // Menambahkan token ke header Authorization
+        }
+      }
     );
     if (!response.ok) throw new Error("Gagal mengambil data pelanggan");
     const customer = await response.json();
@@ -28,7 +34,12 @@ async function fetchCustomerById(customerId) {
 // Fungsi untuk mengambil daftar layanan dari API
 async function fetchServices() {
   try {
-    const response = await fetch("https://laundry-pos-ten.vercel.app/services");
+    const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
+    const response = await fetch("https://laundry-pos-ten.vercel.app/services", {
+      headers: {
+        'Authorization': `Bearer ${token}` // Menambahkan token ke header Authorization
+      }
+    });
     if (!response.ok) throw new Error("Gagal mengambil data layanan");
     const services = await response.json();
     console.log("Services Data:", services);
@@ -39,6 +50,7 @@ async function fetchServices() {
     return [];
   }
 }
+
 
 // Variabel global untuk menyimpan data layanan
 let services = [];
@@ -107,12 +119,14 @@ weight.addEventListener("input", calculatePrice);
 // Fungsi untuk mengirim data transaksi ke API
 async function createTransaction(transactionData) {
   try {
+    const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
     const response = await fetch(
       "https://laundry-pos-ten.vercel.app/transactions",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}` // Menambahkan token ke header Authorization
         },
         body: JSON.stringify(transactionData), // Kirim data transaksi dalam bentuk JSON
       }
@@ -162,7 +176,7 @@ orderButton.addEventListener("click", async function () {
       },
     ],
     totalAmount: totalPrice, // Total harga transaksi
-    paymentMethod: "Cash", // Misalnya metode pembayaran Cash
+    paymentMethod: "Midtrans", // Misalnya metode pembayaran Cash
     status: "Pending", // Status transaksi
     snapURL: "", // Anda bisa menambahkan URL pembayaran jika menggunakan sistem pembayaran lain
   };

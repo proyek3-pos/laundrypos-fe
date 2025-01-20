@@ -10,7 +10,15 @@ const orderTableBody = document.querySelector("#order-table tbody");
 // Fungsi untuk mengambil semua pelanggan
 async function getCustomers() {
     try {
-        const response = await fetch('https://laundry-pos-ten.vercel.app/customers');
+        const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
+        const response = await fetch('https://laundry-pos-ten.vercel.app/customers', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Tambahkan token ke header Authorization
+            }
+        });
+
         if (!response.ok) throw new Error('Gagal mengambil data pelanggan');
         const customers = await response.json();
         return customers;
@@ -20,6 +28,7 @@ async function getCustomers() {
         return [];
     }
 }
+
 
 // Fungsi untuk menambahkan pelanggan baru
 async function addCustomer() {
@@ -33,9 +42,13 @@ async function addCustomer() {
     }
 
     try {
+        const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
         const response = await fetch('https://laundry-pos-ten.vercel.app/customers', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Tambahkan token ke header Authorization
+            },
             body: JSON.stringify({ fullName: name, phoneNumber: phone, email: email })
         });
 
@@ -49,6 +62,7 @@ async function addCustomer() {
     }
 }
 
+
 // Fungsi untuk mengedit pelanggan
 async function editCustomer(customerId) {
     console.log('Edit Customer ID:', customerId); // Debugging
@@ -58,7 +72,15 @@ async function editCustomer(customerId) {
     }
 
     try {
-        const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`);
+        const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
+        const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Tambahkan token ke header Authorization
+            }
+        });
+
         if (!response.ok) throw new Error('Gagal mengambil data pelanggan');
         
         const customer = await response.json();
@@ -84,7 +106,10 @@ async function editCustomer(customerId) {
         if (formValues) {
             const updateResponse = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // Tambahkan token ke header Authorization
+                },
                 body: JSON.stringify(formValues)
             });
 
@@ -109,6 +134,7 @@ async function deleteCustomer(customerId) {
     }
 
     try {
+        const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
         const result = await Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Data pelanggan akan dihapus permanen!",
@@ -121,6 +147,9 @@ async function deleteCustomer(customerId) {
         if (result.isConfirmed) {
             const deleteResponse = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}` // Tambahkan token ke header Authorization
+                }
             });
 
             if (!deleteResponse.ok) {
@@ -137,6 +166,7 @@ async function deleteCustomer(customerId) {
         Swal.fire('Error', error.message, 'error');
     }
 }
+
 
 // Fungsi untuk menampilkan data pelanggan di tabel
 async function displayCustomers() {
