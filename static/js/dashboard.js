@@ -102,7 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
     // Fetch the list of services
-    fetch('https://laundry-pos-ten.vercel.app/services')
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    fetch('https://laundry-pos-ten.vercel.app/services', { headers })
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector('#order-table tbody');
@@ -138,7 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('save-btn').addEventListener('click', addService);
 });
 
-
 async function addService() {
     const serviceName = document.getElementById('service-name').value.trim();
     const serviceDescription = document.getElementById('description').value.trim();
@@ -157,6 +161,12 @@ async function addService() {
         unit: serviceWeight
     };
 
+    // Cek token yang tersimpan di localStorage/sessionStorage
+    let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    if (token && !token.startsWith('Bearer ')) {
+        token = 'Bearer ' + token;  // Tambahkan 'Bearer ' jika belum ada
+    }
+
     // Konfirmasi sebelum menyimpan data
     const result = await Swal.fire({
         title: 'Apakah Anda yakin?',
@@ -173,7 +183,8 @@ async function addService() {
             const response = await fetch('https://laundry-pos-ten.vercel.app/services', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': token // Menambahkan token di header Authorization
                 },
                 body: JSON.stringify(newService)
             });
@@ -191,7 +202,6 @@ async function addService() {
     }
 }
 
-
 async function handleEdit(event) {
     const serviceId = event.target.getAttribute('data-id');
     if (!serviceId) {
@@ -200,7 +210,12 @@ async function handleEdit(event) {
     }
 
     try {
-        const response = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`);
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        const response = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
+            }
+        });
         if (!response.ok) throw new Error('Gagal mengambil data service');
 
         const service = await response.json();
@@ -227,7 +242,10 @@ async function handleEdit(event) {
         if (formValues) {
             const updateResponse = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
+                },
                 body: JSON.stringify(formValues)
             });
 
@@ -244,7 +262,6 @@ async function handleEdit(event) {
         Swal.fire('Error', error.message, 'error');
     }
 }
-    
 
 async function handleDelete(event) {
     const serviceId = event.target.getAttribute('data-id');
@@ -254,6 +271,7 @@ async function handleDelete(event) {
     }
 
     try {
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
         const result = await Swal.fire({
             title: 'Apakah Anda yakin?',
             text: 'Data service akan dihapus permanen!',
@@ -266,6 +284,9 @@ async function handleDelete(event) {
         if (result.isConfirmed) {
             const deleteResponse = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
+                },
             });
 
             if (!deleteResponse.ok) {
@@ -285,7 +306,12 @@ async function handleDelete(event) {
 
 async function displayServices() {
     try {
-        const response = await fetch('https://laundry-pos-ten.vercel.app/services');
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        const response = await fetch('https://laundry-pos-ten.vercel.app/services', {
+            headers: {
+                'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
+            }
+        });
         if (!response.ok) throw new Error('Gagal mengambil data services');
         const services = await response.json();
 

@@ -7,10 +7,24 @@ const saveButton = document.getElementById("save-btn");
 const customerForm = document.getElementById("customer-form");
 const orderTableBody = document.querySelector("#order-table tbody");
 
+// Fungsi untuk mengambil token dari localStorage/sessionStorage
+const getAuthToken = () => {
+    let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    return token && !token.startsWith('Bearer ') ? 'Bearer ' + token : token;
+}
+
 // Fungsi untuk mengambil semua pelanggan
 async function getCustomers() {
+    const token = getAuthToken();
+    if (!token) {
+        Swal.fire('Error', 'Token tidak ditemukan', 'error');
+        return [];
+    }
+
     try {
-        const response = await fetch('https://laundry-pos-ten.vercel.app/customers');
+        const response = await fetch('https://laundry-pos-ten.vercel.app/customers', {
+            headers: { 'Authorization': token }
+        });
         if (!response.ok) throw new Error('Gagal mengambil data pelanggan');
         const customers = await response.json();
         return customers;
@@ -26,6 +40,7 @@ async function addCustomer() {
     const name = document.getElementById("customer-name").value.trim();
     const phone = document.getElementById("customer-phone").value.trim();
     const email = document.getElementById("customer-email").value.trim();
+    const token = getAuthToken();
 
     if (!name || !phone || !email) {
         Swal.fire('Peringatan', 'Semua field wajib diisi!', 'warning');
@@ -35,7 +50,10 @@ async function addCustomer() {
     try {
         const response = await fetch('https://laundry-pos-ten.vercel.app/customers', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
             body: JSON.stringify({ fullName: name, phoneNumber: phone, email: email })
         });
 
@@ -56,9 +74,17 @@ async function editCustomer(customerId) {
         Swal.fire('Error', 'ID pelanggan tidak ditemukan', 'error');
         return;
     }
+    
+    const token = getAuthToken();
+    if (!token) {
+        Swal.fire('Error', 'Token tidak ditemukan', 'error');
+        return;
+    }
 
     try {
-        const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`);
+        const response = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`, {
+            headers: { 'Authorization': token }
+        });
         if (!response.ok) throw new Error('Gagal mengambil data pelanggan');
         
         const customer = await response.json();
@@ -84,7 +110,10 @@ async function editCustomer(customerId) {
         if (formValues) {
             const updateResponse = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
                 body: JSON.stringify(formValues)
             });
 
@@ -98,13 +127,17 @@ async function editCustomer(customerId) {
     }
 }
 
-
-
 // Fungsi untuk menghapus pelanggan
 async function deleteCustomer(customerId) {
     console.log('Delete Customer ID:', customerId); // Debugging
     if (!customerId) {
         Swal.fire('Error', 'ID pelanggan tidak ditemukan', 'error');
+        return;
+    }
+
+    const token = getAuthToken();
+    if (!token) {
+        Swal.fire('Error', 'Token tidak ditemukan', 'error');
         return;
     }
 
@@ -121,6 +154,7 @@ async function deleteCustomer(customerId) {
         if (result.isConfirmed) {
             const deleteResponse = await fetch(`https://laundry-pos-ten.vercel.app/customer-id?id=${customerId}`, {
                 method: 'DELETE',
+                headers: { 'Authorization': token }
             });
 
             if (!deleteResponse.ok) {
@@ -138,17 +172,14 @@ async function deleteCustomer(customerId) {
     }
 }
 
-
-
-
 // Fungsi untuk menampilkan data pelanggan di tabel
 async function displayCustomers() {
     const customers = await getCustomers();
     console.log('Customers:', customers); // Debugging: pastikan atribut ID terlihat dengan nama yang benar
 
-        orderTableBody.innerHTML = "";
+    orderTableBody.innerHTML = "";
 
-        customers.forEach(customer => {
+    customers.forEach(customer => {
         console.log('Customer:', customer); // Debugging
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -156,14 +187,13 @@ async function displayCustomers() {
             <td>${customer.phoneNumber}</td>
             <td>${customer.email}</td>
             <td>
-            <button class="btn btn-sm btn-warning" onclick="editCustomer('${customer.id}')">
-                <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-danger" onclick="deleteCustomer('${customer.id}')">
-                <i class="fas fa-trash"></i>
-            </button>
+                <button class="btn btn-sm btn-warning" onclick="editCustomer('${customer.id}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteCustomer('${customer.id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
             </td>
-
         `;
         orderTableBody.appendChild(row);
     });
@@ -177,25 +207,22 @@ document.addEventListener("DOMContentLoaded", displayCustomers);
 window.editCustomer = editCustomer;
 window.deleteCustomer = deleteCustomer;
 
-
 // Sidebar
 const sidebar = document.getElementById('sidebar');
 const toggleSidebar = document.getElementById('toggleSidebar');
 const closeSidebar = document.getElementById('closeSidebar');
 
 toggleSidebar.addEventListener('click', () => {
-sidebar.classList.toggle('hidden');
-sidebar.classList.toggle('visible');
-document.querySelector('.content').classList.toggle('full-width');
+    sidebar.classList.toggle('hidden');
+    sidebar.classList.toggle('visible');
+    document.querySelector('.content').classList.toggle('full-width');
 });
 
 closeSidebar.addEventListener('click', () => {
-sidebar.classList.toggle('hidden');
-sidebar.classList.toggle('visible');
-document.querySelector('.content').classList.toggle('full-width');
+    sidebar.classList.toggle('hidden');
+    sidebar.classList.toggle('visible');
+    document.querySelector('.content').classList.toggle('full-width');
 });
-
-
 
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.querySelector('.logout');
@@ -272,4 +299,3 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('logoutButton element not found');
     }
 });
-

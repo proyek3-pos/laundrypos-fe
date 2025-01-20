@@ -9,18 +9,16 @@ const toggleSidebar = document.getElementById('toggleSidebar');
 const closeSidebar = document.getElementById('closeSidebar');
 
 toggleSidebar.addEventListener('click', () => {
-sidebar.classList.toggle('hidden');
-sidebar.classList.toggle('visible');
-document.querySelector('.content').classList.toggle('full-width');
+    sidebar.classList.toggle('hidden');
+    sidebar.classList.toggle('visible');
+    document.querySelector('.content').classList.toggle('full-width');
 });
 
 closeSidebar.addEventListener('click', () => {
-sidebar.classList.toggle('hidden');
-sidebar.classList.toggle('visible');
-document.querySelector('.content').classList.toggle('full-width');
+    sidebar.classList.toggle('hidden');
+    sidebar.classList.toggle('visible');
+    document.querySelector('.content').classList.toggle('full-width');
 });
-
-
 
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.querySelector('.logout');
@@ -46,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     // Cek token yang tersimpan di localStorage/sessionStorage
                     let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-                    
+
                     // Cek apakah token ada dan formatnya benar
                     if (token && !token.startsWith('Bearer ')) {
                         token = 'Bearer ' + token;  // Tambahkan 'Bearer ' jika belum ada
@@ -98,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// Ambil data transaksi saat halaman dimuat
 document.addEventListener("DOMContentLoaded", function() {
     // Fungsi untuk mengambil data transaksi
     const getTransactions = async (status = '', date = '') => {
@@ -106,14 +105,23 @@ document.addEventListener("DOMContentLoaded", function() {
             if (status || date) {
                 url += `?status=${status}&date=${date}`;
             }
-            const response = await fetch(url); // Pastikan endpoint ini benar
-            console.log(response); // Menambahkan log untuk memeriksa status response
+            
+            let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+            if (token && !token.startsWith('Bearer ')) {
+                token = 'Bearer ' + token;  // Menambahkan 'Bearer ' jika belum ada
+            }
+
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': token // Menambahkan token dalam header Authorization
+                }
+            });
+
             if (!response.ok) {
                 throw new Error(`Gagal memuat transaksi: ${response.statusText}`);
             }
-    
+
             const transactions = await response.json();
-            console.log(transactions); // Menambahkan log untuk memeriksa data transaksi yang diterima
             renderTransactions(transactions);
         } catch (error) {
             if (error.name === 'TypeError') {
@@ -141,11 +149,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (result.isConfirmed) {
             try {
+                let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+                if (token && !token.startsWith('Bearer ')) {
+                    token = 'Bearer ' + token;
+                }
+
                 const response = await fetch(`https://laundry-pos-ten.vercel.app/transaction-id?id=${transactionId}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
+                        'Authorization': token // Menambahkan token dalam header Authorization
                     }
                 });
 
@@ -164,37 +177,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // Fungsi untuk memfilter data transaksi
-    const filterOrders = () => {
-        const status = document.getElementById('filterOrderStatus').value;
-        const date = document.getElementById('filterDate').value;
-        getTransactions(status, date);
-    };
-
-    // Fungsi untuk memfilter transaksi berdasarkan status
-    window.filterOrders = (status) => {
-        const rows = document.querySelectorAll('#transactionsTableBody tr');
-        rows.forEach(row => {
-            const statusCell = row.querySelector('td:nth-child(6) .badge');
-            
-            // Ensure the statusCell exists and has valid textContent
-            if (statusCell && statusCell.textContent) {
-                const statusText = statusCell.textContent.trim().toLowerCase(); // Normalize text
-
-                if (status === 'all' || statusText === status.toLowerCase()) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            } else {
-                // If the statusCell doesn't exist or has no content, hide the row or handle it accordingly
-                row.style.display = 'none';  // Or you can leave this as is if you prefer the row to be hidden by default
-            }
-        });
-    };
-
-
-
     // Fungsi untuk merender data transaksi ke dalam tabel
     const renderTransactions = (transactions) => {
         const tableBody = document.getElementById('transactionsTableBody');
@@ -202,7 +184,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         transactions.forEach((transaction, index) => {
             const row = document.createElement('tr');
-
             const transactionDate = new Date(transaction.transactionDate).toLocaleDateString();
             const statusClass = getStatusClass(transaction.status);
             const formattedAmount = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(transaction.totalAmount);
