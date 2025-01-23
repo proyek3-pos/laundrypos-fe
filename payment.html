@@ -6,31 +6,48 @@
     <title>Laundry POS</title>
     <link rel="icon" href="static/img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="static/css/payment.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <h2>Form Pembayaran</h2>
         <form id="payment-form">
-            <label for="customerName">Nama</label>
-            <input type="text" id="customerName" name="customerName" readonly><br><br>
+            <div class="grid-container">
+                <div class="form-group">
+                    <label for="customerName">Nama</label>
+                    <input type="text" id="customerName" name="customerName" readonly>
+                </div>
 
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" readonly><br><br>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" readonly>
+                </div>
 
-            <label for="phone">Telepon</label>
-            <input type="text" id="phone" name="phone" readonly><br><br>
+                <div class="form-group">
+                    <label for="phone">Telepon</label>
+                    <input type="text" id="phone" name="phone" readonly>
+                </div>
 
-            <label for="service">Layanan</label>
-            <input type="text" id="service" name="service" readonly><br><br>
+                <div class="form-group">
+                    <label for="service">Layanan</label>
+                    <input type="text" id="service" name="service" readonly>
+                </div>
 
-            <label for="weight">Berat (Kg)</label>
-            <input type="text" id="weight" name="weight" readonly><br><br>
+                <div class="form-group">
+                    <label for="weight">Berat (Kg)</label>
+                    <input type="text" id="weight" name="weight" readonly>
+                </div>
 
-            <label for="gross_amount">Jumlah Pembayaran</label>
-            <input type="text" id="gross_amount" name="gross_amount" readonly><br><br>
+                <div class="form-group">
+                    <label for="gross_amount">Jumlah Pembayaran</label>
+                    <input type="text" id="gross_amount" name="gross_amount" readonly>
+                </div>
 
-            <label for="transactionId">Transaction ID</label>
-            <input type="text" id="transactionId" name="transactionId" readonly><br><br>
+                <div class="form-group">
+                    <label for="transactionId">Transaction ID</label>
+                    <input type="text" id="transactionId" name="transactionId" readonly>
+                </div>
+            </div>
 
             <button type="submit" id="pay-button">Bayar Sekarang</button>
         </form>

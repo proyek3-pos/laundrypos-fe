@@ -2,18 +2,18 @@ const sidebar = document.getElementById('sidebar');
 const toggleSidebar = document.getElementById('toggleSidebar');
 const closeSidebar = document.getElementById('closeSidebar');
 
-// Toggle sidebar on and off
 toggleSidebar.addEventListener('click', () => {
-    sidebar.classList.toggle('hidden');
-    sidebar.classList.toggle('visible');
-    document.querySelector('.content').classList.toggle('full-width');
+sidebar.classList.toggle('hidden');
+sidebar.classList.toggle('visible');
+document.querySelector('.content').classList.toggle('full-width');
 });
 
 closeSidebar.addEventListener('click', () => {
-    sidebar.classList.toggle('hidden');
-    sidebar.classList.toggle('visible');
-    document.querySelector('.content').classList.toggle('full-width');
+sidebar.classList.toggle('hidden');
+sidebar.classList.toggle('visible');
+document.querySelector('.content').classList.toggle('full-width');
 });
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const logoutButton = document.querySelector('.logout');
@@ -84,268 +84,80 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         console.log('logoutButton element not found');
     }
-});
 
-// Set the active page in the sidebar
-document.addEventListener("DOMContentLoaded", () => {
-    // Dapatkan nama halaman saat ini
-    const currentPage = window.location.pathname.split('/').pop(); // Mengambil nama file dari URL
-
-    // Dapatkan tautan sidebar
-    const dashboardLink = document.querySelector('a[href="dashboard.html"]');
-
-    // Tentukan halaman yang aktif dan beri kelas 'active' pada tautan
-    if (currentPage === 'dashboard.html') {
-        dashboardLink.classList.add('active'); // Menambahkan kelas 'active' untuk tautan dashboard
-    }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    // Fetch the list of services
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
-
-    fetch('https://laundry-pos-ten.vercel.app/services', { headers })
-        .then(response => response.json())
-        .then(data => {
-            const tbody = document.querySelector('#order-table tbody');
-            tbody.innerHTML = ''; // Clear existing rows
-
-            data.forEach(service => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${service.serviceName}</td>
-                    <td>${service.description}</td>
-                    <td>${service.unitPrice}</td>
-                    <td>${service.unit}</td>
-                    <td>
-                        <button class="btn btn-primary btn-sm edit-btn" data-id="${service.id}">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-btn" data-id="${service.id}">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            // Add event listeners for edit and delete buttons
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', handleEdit);
-            });
-
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', handleDelete);
-            });
-        })
-        .catch(error => console.error('Error fetching services:', error));
-    
-    // Handle form submission
-    document.getElementById('save-btn').addEventListener('click', addService);
-});
-
-async function addService() {
-    const serviceName = document.getElementById('service-name').value.trim();
-    const serviceDescription = document.getElementById('description').value.trim();
-    const servicePrice = parseFloat(document.getElementById('price').value.trim());
-    const serviceWeight = document.getElementById('weight').value.trim();
-
-    if (!serviceName || !serviceDescription || isNaN(servicePrice) || !serviceWeight) {
-        Swal.fire('Peringatan', 'Semua field wajib diisi dengan benar!', 'warning');
-        return;
-    }
-
-    const newService = {
-        serviceName,
-        description: serviceDescription,
-        unitPrice: servicePrice,
-        unit: serviceWeight
-    };
-
-    // Cek token yang tersimpan di localStorage/sessionStorage
-    let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    if (token && !token.startsWith('Bearer ')) {
-        token = 'Bearer ' + token;  // Tambahkan 'Bearer ' jika belum ada
-    }
-
-    // Konfirmasi sebelum menyimpan data
-    const result = await Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: 'Data service akan disimpan.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Simpan!',
-        cancelButtonText: 'Batal',
-        reverseButtons: true
-    });
-
-    if (result.isConfirmed) {
+    // Fungsi untuk mengambil data pembayaran
+    const getPayments = async () => {
         try {
-            const response = await fetch('https://laundry-pos-ten.vercel.app/services', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token // Menambahkan token di header Authorization
-                },
-                body: JSON.stringify(newService)
-            });
-
-            if (!response.ok) throw new Error('Gagal menambahkan service');
-            Swal.fire('Sukses', 'Service berhasil ditambahkan!', 'success');
-            displayServices();
-            document.getElementById('service-form').reset();
-        } catch (error) {
-            console.error(error);
-            Swal.fire('Error', error.message, 'error');
-        }
-    } else {
-        Swal.fire('Batal', 'Data tidak disimpan.', 'info');
-    }
-}
-
-async function handleEdit(event) {
-    const serviceId = event.target.getAttribute('data-id');
-    if (!serviceId) {
-        Swal.fire('Error', 'ID service tidak ditemukan', 'error');
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-        const response = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
-            }
-        });
-        if (!response.ok) throw new Error('Gagal mengambil data service');
-
-        const service = await response.json();
-
-        const { value: formValues } = await Swal.fire({
-            title: 'Edit Data Service',
-            html: `
-                <input id="swal-name" class="swal2-input" value="${service.serviceName}" placeholder="Nama Service">
-                <input id="swal-description" class="swal2-input" value="${service.description}" placeholder="Deskripsi">
-                <input id="swal-price" class="swal2-input" value="${service.unitPrice}" placeholder="Harga">
-                <input id="swal-weight" class="swal2-input" value="${service.unit}" placeholder="Berat">
-            `,
-            focusConfirm: false,
-            preConfirm: () => {
-                return {
-                    serviceName: document.getElementById('swal-name').value.trim(),
-                    description: document.getElementById('swal-description').value.trim(),
-                    unitPrice: parseFloat(document.getElementById('swal-price').value.trim()) || 0,
-                    unit: document.getElementById('swal-weight').value.trim(),
-                };
-            }
-        });
-
-        if (formValues) {
-            const updateResponse = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`, {
-                method: 'PUT',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
-                },
-                body: JSON.stringify(formValues)
-            });
-
-            if (!updateResponse.ok) {
-                const errorText = await updateResponse.text();
-                throw new Error(`Gagal memperbarui data service: ${errorText}`);
-            }
-
-            Swal.fire('Sukses', 'Data service diperbarui!', 'success');
-            displayServices();
-        }
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
-    }
-}
-
-async function handleDelete(event) {
-    const serviceId = event.target.getAttribute('data-id');
-    if (!serviceId) {
-        Swal.fire('Error', 'ID service tidak ditemukan', 'error');
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-        const result = await Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: 'Data service akan dihapus permanen!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        });
-
-        if (result.isConfirmed) {
-            const deleteResponse = await fetch(`https://laundry-pos-ten.vercel.app/service-id?id=${serviceId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
-                },
-            });
-
-            if (!deleteResponse.ok) {
-                const errorMessage = await deleteResponse.text();
-                Swal.fire('Error', errorMessage, 'error');
-                return;
-            }
+            let url = 'https://laundry-pos-ten.vercel.app/payments';
             
-            Swal.fire('Sukses', 'Data service berhasil dihapus!', 'success');
-            displayServices();
-        }
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
-    }
-}
-
-async function displayServices() {
-    try {
-        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-        const response = await fetch('https://laundry-pos-ten.vercel.app/services', {
-            headers: {
-                'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
+            let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+            if (token && !token.startsWith('Bearer ')) {
+                token = 'Bearer ' + token;  // Menambahkan 'Bearer ' jika belum ada
             }
-        });
-        if (!response.ok) throw new Error('Gagal mengambil data services');
-        const services = await response.json();
 
-        const tbody = document.querySelector('#order-table tbody');
-        tbody.innerHTML = ''; // Clear existing rows
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': token // Menambahkan token dalam header Authorization
+                }
+            });
 
-        services.forEach(service => {
+            if (!response.ok) {
+                throw new Error(`Gagal memuat pembayaran: ${response.statusText}`);
+            }
+
+            const payments = await response.json();
+            renderPayments(payments);
+        } catch (error) {
+            if (error.name === 'TypeError') {
+                console.error('Network error:', error.message);
+                alert('Terjadi kesalahan jaringan saat memuat data pembayaran');
+            } else {
+                console.error('Error fetching payments:', error.message);
+                alert('Terjadi kesalahan saat memuat data pembayaran');
+            }
+        }
+    };
+
+    // Fungsi untuk merender data pembayaran ke dalam tabel
+    const renderPayments = (payments) => {
+        const tableBody = document.getElementById('salesReportTable').querySelector('tbody');
+        tableBody.innerHTML = ''; // Bersihkan tabel sebelumnya
+
+        payments.forEach((payment, index) => {
             const row = document.createElement('tr');
+            const paymentDate = new Date(payment.paymentDate).toLocaleDateString();
+            const statusClass = getStatusClass(payment.status);
+
             row.innerHTML = `
-                <td>${service.serviceName}</td>
-                <td>${service.description}</td>
-                <td>${service.unitPrice}</td>
-                <td>${service.unit}</td>
-                <td>
-                    <button class="btn btn-primary btn-sm edit-btn" data-id="${service.id}">Edit</button>
-                    <button class="btn btn-danger btn-sm delete-btn" data-id="${service.id}">Delete</button>
-                </td>
+                <td>${index + 1}</td>
+                <td>${new Date(payment.created_at).toLocaleDateString()}</td>
+                 <td>${payment.id}</td>
+                <td><span class="badge ${statusClass}">${capitalizeFirstLetter(payment.status)}</span></td>
             `;
-            tbody.appendChild(row);
-        });
 
-        // Add event listeners for edit and delete buttons
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', handleEdit);
+            tableBody.appendChild(row);
         });
+    };
 
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', handleDelete);
-        });
-    } catch (error) {
-        console.error(error);
-        Swal.fire('Error', error.message, 'error');
-    }
-}
+    // Fungsi untuk mendapatkan class status sesuai dengan status pembayaran
+    const getStatusClass = (status) => {
+        switch (status.toLowerCase()) {
+            case 'pending':
+                return 'bg-warning';
+            case 'settlement':
+                return 'bg-success';
+            case 'expire':
+                return 'bg-danger';
+            default:
+                return 'bg-secondary';
+        }
+    };
 
-// Tampilkan services saat halaman dimuat
-document.addEventListener("DOMContentLoaded", displayServices);
+    // Fungsi untuk memodifikasi huruf pertama menjadi kapital
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
+    // Ambil data pembayaran saat halaman dimuat
+    getPayments();
+});

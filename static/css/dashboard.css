@@ -95,19 +95,37 @@ body {
     color: white;
     font-size: 20px;
 }
-
-        /* Custom styles */
-        .sidebar {
-            width: 250px;
-            transition: transform 0.3s ease-in-out;
-        }
-        .sidebar.hidden {
-            transform: translateX(-100%);
-        }
+        
         .card {
             border: none;
+            border-radius: 15px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
+        
+        .table thead {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .table tbody tr {
+            background-color: white;
+            border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
-        .navbar {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        
+        .table tbody tr:hover {
+            transform: scale(1.02);
+            background-color: #f1f1f1;
         }
+        
