@@ -165,3 +165,25 @@ document.getElementById("payment-form").addEventListener("submit", async functio
         Swal.fire('Error', `Terjadi kesalahan: ${error.message}`, 'error');
     }
 });
+
+
+ // Fungsi untuk melakukan validasi localStorage
+ function validateLogin() {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      Swal.fire({
+        title: "Akses Ditolak",
+        text: "Silahkan login terlebih dahulu",
+        icon: "warning",
+        confirmButtonText: "Login",
+      }).then(() => {
+        // Redirect ke halaman login jika diperlukan
+        window.location.href = "/laundrypos-fe";
+      });
+    }
+  }
+
+  // Panggil fungsi untuk menyimpan token dan validasi saat halaman dimuat
+  document.addEventListener("DOMContentLoaded", () => {
+    validateLogin();
+  });

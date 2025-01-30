@@ -119,7 +119,22 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     fetch('https://laundry-pos-ten.vercel.app/services', { headers })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text(); // Get response as text
+        })
+        .then(text => {
+            if (!text) {
+                throw new Error('Response text is empty');
+            }
+            try {
+                return JSON.parse(text); // Try to parse JSON
+            } catch (error) {
+                throw new Error('Failed to parse JSON');
+            }
+        })
         .then(data => {
             const tbody = document.querySelector('#order-table tbody');
             tbody.innerHTML = ''; // Clear existing rows
@@ -329,8 +344,19 @@ async function displayServices() {
                 'Authorization': `Bearer ${token}` // Menambahkan token di header Authorization
             }
         });
-        if (!response.ok) throw new Error('Gagal mengambil data services');
-        const services = await response.json();
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const text = await response.text(); // Get response as text
+        if (!text) {
+            throw new Error('Response text is empty');
+        }
+        let services;
+        try {
+            services = JSON.parse(text); // Try to parse JSON
+        } catch (error) {
+            throw new Error('Failed to parse JSON');
+        }
 
         const tbody = document.querySelector('#order-table tbody');
         tbody.innerHTML = ''; // Clear existing rows
@@ -366,3 +392,24 @@ async function displayServices() {
 
 // Tampilkan services saat halaman dimuat
 document.addEventListener("DOMContentLoaded", displayServices);
+
+ // Fungsi untuk melakukan validasi localStorage
+ function validateLogin() {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      Swal.fire({
+        title: "Akses Ditolak",
+        text: "Silahkan login terlebih dahulu",
+        icon: "warning",
+        confirmButtonText: "Login",
+      }).then(() => {
+        // Redirect ke halaman login jika diperlukan
+        window.location.href = "/laundrypos-fe";
+      });
+    }
+  }
+
+  // Panggil fungsi untuk menyimpan token dan validasi saat halaman dimuat
+  document.addEventListener("DOMContentLoaded", () => {
+    validateLogin();
+  });
