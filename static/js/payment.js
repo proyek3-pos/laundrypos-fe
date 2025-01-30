@@ -1,3 +1,8 @@
+import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/src/sweetalert2.js";
+import { addCSS } from "https://cdn.jsdelivr.net/gh/jscroot/lib@0.0.9/element.js";
+
+addCSS("https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.css");
+
 // Fungsi untuk mengambil query parameter dari URL
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -20,7 +25,7 @@ async function fetchCustomerById(customerId) {
         return customer;
     } catch (error) {
         console.error(error);
-        alert('Terjadi kesalahan saat mengambil data pelanggan!');
+        Swal.fire('Error', 'Terjadi kesalahan saat mengambil data pelanggan!', 'error');
         return null;
     }
 }
@@ -39,13 +44,10 @@ async function fetchTransactionById(transactionId) {
         const transaction = await response.json();
         console.log("Transaction data:", transaction);
 
-        // Debug detail items dan service
-        if (transaction.items) {
+        if (transaction.items && transaction.items.length > 0) {
             console.log("Transaction items:", transaction.items);
-            if (transaction.items.length > 0) {
-                console.log("First item details:", transaction.items[0]);
-                console.log("Service details:", transaction.items[0].service);
-            }
+            console.log("First item details:", transaction.items[0]);
+            console.log("Service details:", transaction.items[0].service);
         } else {
             console.warn("Transaction does not contain items.");
         }
@@ -53,7 +55,7 @@ async function fetchTransactionById(transactionId) {
         return transaction;
     } catch (error) {
         console.error(error);
-        alert('Terjadi kesalahan saat mengambil data transaksi!');
+        Swal.fire('Error', 'Terjadi kesalahan saat mengambil data transaksi!', 'error');
         return null;
     }
 }
@@ -63,24 +65,22 @@ async function initializePaymentForm() {
     const customerId = getQueryParam('customerId');
     const transactionId = getQueryParam('transactionId');
 
-    // Validasi parameter URL
     if (!customerId || !transactionId) {
-        alert('Data tidak lengkap. Pastikan semua parameter URL tersedia.');
-        window.history.back();
+        Swal.fire('Error', 'Data tidak lengkap. Pastikan semua parameter URL tersedia.', 'error').then(() => {
+            window.history.back();
+        });
         return;
     }
 
-    // Ambil data pelanggan
     const customer = await fetchCustomerById(customerId);
     if (customer) {
         document.getElementById('customerName').value = customer.fullName || '';
         document.getElementById('email').value = customer.email || '';
         document.getElementById('phone').value = customer.phoneNumber || '';
     } else {
-        alert('Data pelanggan tidak ditemukan!');
+        Swal.fire('Error', 'Data pelanggan tidak ditemukan!', 'error');
     }
 
-    // Ambil data transaksi
     const transaction = await fetchTransactionById(transactionId);
     if (transaction) {
         if (transaction.items && transaction.items.length > 0) {
@@ -92,10 +92,10 @@ async function initializePaymentForm() {
             document.getElementById('gross_amount').value = `Rp ${transaction.totalAmount.toLocaleString('id-ID')}`;
             document.getElementById('transactionId').value = transactionId;
         } else {
-            alert('Tidak ada item atau layanan dalam transaksi ini!');
+            Swal.fire('Error', 'Tidak ada item atau layanan dalam transaksi ini!', 'error');
         }
     } else {
-        alert('Data transaksi tidak ditemukan!');
+        Swal.fire('Error', 'Data Transaksi Tidak Ditemukan!', 'error');
     }
 }
 
@@ -110,7 +110,15 @@ document.getElementById("payment-form").addEventListener("submit", async functio
 
     const transactionId = document.getElementById("transactionId").value;
 
-    // Lakukan proses pembayaran
+    Swal.fire({
+        title: 'Memproses Pembayaran...',
+        text: 'Mohon tunggu sebentar.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     try {
         const token = localStorage.getItem('authToken'); // Ambil token dari localStorage
         const response = await fetch('https://laundry-pos-ten.vercel.app/create-payment', {
@@ -121,7 +129,6 @@ document.getElementById("payment-form").addEventListener("submit", async functio
             },
             body: JSON.stringify({
                 transactionId: transactionId,
-                // payment_method: "Cash", // Contoh pembayaran dengan metode Cash
             }),
         });
 
@@ -129,17 +136,32 @@ document.getElementById("payment-form").addEventListener("submit", async functio
 
         const result = await response.json();
         console.log("Payment result:", result);
+        Swal.close();
 
-        // Redirect ke halaman snap_url jika tersedia
-        if (result.snap_url) {
-            alert("Pembayaran berhasil! Anda akan diarahkan ke halaman pembayaran.");
-            window.location.href = result.snap_url;
+
+        // Pastikan Anda mendapatkan token dari response
+        if (result.token) {
+            // Menampilkan popup Midtrans dengan token yang diterima
+            snap.pay(result.token, {
+                onSuccess: function (result) {
+                    Swal.fire('Pembayaran Berhasil!', 'Terima kasih telah melakukan pembayaran.', 'success').then(() => {
+                        window.location.href = `payment-staff.html`;
+                    });
+                },
+                onPending: function (result) {
+                    Swal.fire('Pembayaran Pending', 'Pembayaran Anda masih dalam proses.', 'info');
+                    console.log(result);
+                },
+                onError: function (result) {
+                    Swal.fire('Error', 'Terjadi kesalahan pada pembayaran.', 'error');
+                    console.log(result);
+                }
+            });
         } else {
-            alert("Pembayaran berhasil tetapi tidak ada snap_url yang ditemukan!");
+            Swal.fire('Error', 'Tidak ada token pembayaran yang diterima.', 'error');
         }
     } catch (error) {
         console.error('Error during payment process:', error);
-        alert("Terjadi kesalahan: " + error.message);
+        Swal.fire('Error', `Terjadi kesalahan: ${error.message}`, 'error');
     }
 });
-

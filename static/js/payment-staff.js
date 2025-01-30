@@ -43,6 +43,7 @@ async function displayPayments() {
             <td>${paymentDate}</td>
             <td>${payment.id}</td>
             <td><span class="badge ${statusClass}">${capitalizeFirstLetter(payment.status)}</span></td>
+            <td>Rp ${payment.gross_amount.toLocaleString('id-ID')}</td>
         `;
 
         orderTableBody.appendChild(row);
@@ -69,7 +70,6 @@ const capitalizeFirstLetter = (string) => {
 };
 
 displayPayments();
-
 
 const logoutButton = document.querySelector('.logout');
 

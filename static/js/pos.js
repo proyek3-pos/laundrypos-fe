@@ -1,3 +1,8 @@
+import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11/src/sweetalert2.js";
+import { addCSS } from "https://cdn.jsdelivr.net/gh/jscroot/lib@0.0.9/element.js";
+
+addCSS("https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.css");
+
 // Fungsi untuk mengambil query parameter dari URL
 function getQueryParam(param) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -26,7 +31,11 @@ async function fetchCustomerById(customerId) {
     return customer;
   } catch (error) {
     console.error(error);
-    alert("Terjadi kesalahan saat mengambil data pelanggan!");
+    Swal.fire({
+      title: "Error!",
+      text: "Terjadi kesalahan saat mengambil data pelanggan!",
+      icon: "error"
+    });
     return null;
   }
 }
@@ -46,7 +55,11 @@ async function fetchServices() {
     return services; // Mengembalikan data layanan
   } catch (error) {
     console.error(error);
-    alert("Terjadi kesalahan saat mengambil data layanan!");
+    Swal.fire({
+      title: "Error!",
+      text: "Terjadi kesalahan saat mengambil data layanan!",
+      icon: "error"
+    });
     return [];
   }
 }
@@ -100,14 +113,14 @@ function calculatePrice() {
       price.value = `Rp ${totalPrice.toLocaleString("id-ID")}`; // Format Rupiah
     } else {
       price.value = ""; // Kosongkan jika layanan tidak ditemukan
-      alert("Layanan tidak valid!");
+      Swal.fire("Error", "Layanan tidak valid!", "error");
     }
   } else {
     price.value = ""; // Kosongkan jika input tidak valid
     if (!selectedService) {
-      alert("Harap pilih jenis layanan!");
+      Swal.fire("Peringatan", "Harap pilih jenis layanan!", "warning");
     } else if (isNaN(weightValue) || weightValue <= 0) {
-      alert("Harap masukkan berat yang valid!");
+      Swal.fire("Peringatan", "Harap masukkan berat yang valid!", "warning");
     }
   }
 }
@@ -138,7 +151,7 @@ async function createTransaction(transactionData) {
     return result; // Mengembalikan data transaksi (termasuk _id yang berupa ObjectId)
   } catch (error) {
     console.error(error);
-    alert("Terjadi kesalahan saat membuat transaksi!");
+    Swal.fire("Error", "Terjadi kesalahan saat membuat transaksi!", "error");
   }
 }
 
@@ -151,7 +164,7 @@ orderButton.addEventListener("click", async function () {
 
   // Cek apakah layanan dan berat valid
   if (!selectedService || isNaN(weightValue) || weightValue <= 0) {
-    alert("Harap isi jenis layanan dan berat dengan benar!");
+    Swal.fire("Peringatan", "Harap isi jenis layanan dan berat dengan benar!", "warning");
     return;
   }
 
@@ -190,14 +203,16 @@ orderButton.addEventListener("click", async function () {
   // Cek apakah transaksi berhasil dibuat
   // Cek apakah transaksi berhasil dibuat
   if (transaction && transaction.id) {
-    // Menampilkan alert bahwa transaksi berhasil
-    alert("Transaksi berhasil dibuat!");
-
-    console.log("Redirecting to payment...");
-    const transactionId = transaction.id; // Ganti _id dengan id
-    // Redirect ke halaman pembayaran
-    window.location.href = `payment.html?customerId=${customerId}&price=${totalPrice}&transactionId=${transactionId}`;
+    Swal.fire({
+      title: "Transaksi Berhasil!",
+      text: "Pesanan Anda telah dibuat.",
+      icon: "success",
+      timer: 2000,
+      showConfirmButton: false
+    }).then(() => {
+      window.location.href = `payment.html?customerId=${customerId}&price=${totalPrice}&transactionId=${transaction.id}`;
+    });
   } else {
-    console.error("Transaction ID is missing or invalid");
+    Swal.fire("Error", "Transaction ID is missing or invalid", "error");
   }
 });
