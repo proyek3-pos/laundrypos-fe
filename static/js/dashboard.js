@@ -131,8 +131,9 @@ document.addEventListener("DOMContentLoaded", () => {
             row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${new Date(payment.created_at).toLocaleDateString()}</td>
-                 <td>${payment.id}</td>
+                <td>${payment.id}</td>
                 <td><span class="badge ${statusClass}">${capitalizeFirstLetter(payment.status)}</span></td>
+                <td>Rp ${payment.gross_amount.toLocaleString('id-ID')}</td>
             `;
 
             tableBody.appendChild(row);
