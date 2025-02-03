@@ -99,11 +99,11 @@ document.addEventListener("DOMContentLoaded", () => {
 // Ambil data transaksi saat halaman dimuat
 document.addEventListener("DOMContentLoaded", function() {
     // Fungsi untuk mengambil data transaksi
-    const getTransactions = async (status = '', date = '') => {
+    const getTransactions = async (date = '') => { // Remove status parameter
         try {
             let url = 'https://laundry-pos-ten.vercel.app/transactions';
-            if (status || date) {
-                url += `?status=${status}&date=${date}`;
+            if (date) { // Remove status check
+                url += `?date=${date}`; // Remove status from query
             }
             
             let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
@@ -185,7 +185,6 @@ document.addEventListener("DOMContentLoaded", function() {
         transactions.forEach((transaction, index) => {
             const row = document.createElement('tr');
             const transactionDate = new Date(transaction.transactionDate).toLocaleDateString();
-            const statusClass = getStatusClass(transaction.status);
             const formattedAmount = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(transaction.totalAmount);
 
             row.innerHTML = `
@@ -194,7 +193,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 <td>${transaction.customer.fullName}</td>
                 <td>${transactionDate}</td>
                 <td>${formattedAmount}</td>
-                <td><span class="badge ${statusClass}">${capitalizeFirstLetter(transaction.status)}</span></td>
                 <td>
                     <button class="btn btn-sm btn-danger" onclick="deleteTransaction('${transaction.id}')"><i class="fa fa-trash"></i></button>
                 </td>
@@ -202,25 +200,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
             tableBody.appendChild(row);
         });
-    };
-
-    // Fungsi untuk mendapatkan class status sesuai dengan status transaksi
-    const getStatusClass = (status) => {
-        switch (status.toLowerCase()) {
-            case 'pending':
-                return 'bg-warning';
-            case 'completed':
-                return 'bg-success';
-            case 'canceled':
-                return 'bg-danger';
-            default:
-                return 'bg-secondary';
-        }
-    };
-
-    // Fungsi untuk memodifikasi huruf pertama menjadi kapital
-    const capitalizeFirstLetter = (string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
     // Ambil data transaksi saat halaman dimuat
