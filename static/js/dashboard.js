@@ -123,6 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const tableBody = document.getElementById('salesReportTable').querySelector('tbody');
         tableBody.innerHTML = ''; // Bersihkan tabel sebelumnya
 
+        let totalSales = 0;
+        let totalOrders = payments.length;
+
         payments.forEach((payment, index) => {
             const row = document.createElement('tr');
             const paymentDate = new Date(payment.paymentDate).toLocaleDateString();
@@ -137,7 +140,15 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
 
             tableBody.appendChild(row);
+
+            totalSales += payment.gross_amount;
         });
+
+        const averageOrder = totalOrders ? (totalSales / totalOrders) : 0;
+
+        document.getElementById('totalSales').textContent = `Rp ${totalSales.toLocaleString('id-ID')}`;
+        document.getElementById('totalOrders').textContent = totalOrders;
+        document.getElementById('averageOrder').textContent = `Rp ${averageOrder.toLocaleString('id-ID')}`;
     };
 
     // Fungsi untuk mendapatkan class status sesuai dengan status pembayaran
@@ -161,6 +172,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Ambil data pembayaran saat halaman dimuat
     getPayments();
+
+    // Panggil fungsi untuk export ke Excel dan PDF saat tombol diklik
+    document.querySelector('.btn-success').addEventListener('click', exportToExcel);
+    document.querySelector('.btn-danger').addEventListener('click', exportToPDF);
 });
 
  // Fungsi untuk melakukan validasi localStorage
@@ -183,3 +198,25 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("DOMContentLoaded", () => {
     validateLogin();
   });
+
+// Fungsi untuk export ke Excel
+function exportToExcel() {
+    import('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js').then(module => {
+        const XLSX = module.default;
+        const table = document.getElementById('salesReportTable');
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+        XLSX.writeFile(wb, 'SalesReport.xlsx');
+    }).catch(error => console.error('Error loading XLSX:', error));
+}
+
+// Fungsi untuk export ke PDF
+function exportToPDF() {
+    import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js').then(module => {
+        const { jsPDF } = module;
+        import('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.26/jspdf.plugin.autotable.min.js').then(autoTableModule => {
+            const doc = new jsPDF();
+            autoTableModule.default(doc, { html: '#salesReportTable' });
+            doc.save('SalesReport.pdf');
+        }).catch(error => console.error('Error loading autoTable:', error));
+    }).catch(error => console.error('Error loading jsPDF:', error));
+}

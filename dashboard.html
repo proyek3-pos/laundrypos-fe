@@ -40,7 +40,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5>Total Sales</h5>
-                        <p class="fs-3">$320</p>
+                        <p id="totalSales" class="fs-3">$0</p> <!-- Updated -->
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5>Total Orders</h5>
-                        <p class="fs-3">3</p>
+                        <p id="totalOrders" class="fs-3">0</p> <!-- Updated -->
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h5>Average Order</h5>
-                        <p class="fs-3">$107</p>
+                        <p id="averageOrder" class="fs-3">$0</p> <!-- Updated -->
                     </div>
                 </div>
             </div>
@@ -94,6 +94,10 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <canvas id="reportChart" height="100"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.26/jspdf.plugin.autotable.min.js"></script>
+
 
 <script type="module" src="static/js/dashboard.js"></script>
 <script>
