@@ -201,22 +201,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Fungsi untuk export ke Excel
 function exportToExcel() {
-    import('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js').then(module => {
-        const XLSX = module.default;
-        const table = document.getElementById('salesReportTable');
-        const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
-        XLSX.writeFile(wb, 'SalesReport.xlsx');
-    }).catch(error => console.error('Error loading XLSX:', error));
+    const table = document.getElementById('salesReportTable');
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Sales Report" });
+    XLSX.writeFile(wb, 'SalesReport.xlsx');
 }
+
 
 // Fungsi untuk export ke PDF
 function exportToPDF() {
-    import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js').then(module => {
-        const { jsPDF } = module;
-        import('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.26/jspdf.plugin.autotable.min.js').then(autoTableModule => {
-            const doc = new jsPDF();
-            autoTableModule.default(doc, { html: '#salesReportTable' });
-            doc.save('SalesReport.pdf');
-        }).catch(error => console.error('Error loading autoTable:', error));
-    }).catch(error => console.error('Error loading jsPDF:', error));
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.autoTable({
+        html: '#salesReportTable', 
+        theme: 'grid'
+    });
+
+    doc.save('SalesReport.pdf');
 }
+
