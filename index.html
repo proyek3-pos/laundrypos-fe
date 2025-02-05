@@ -112,7 +112,7 @@
           <h2 class="pb-4 text-center fw-bold text-primary">Hubungi Kami</h2>
           
           <!-- Form Input -->
-          <form id="contactForm">
+          <form id="contactForm" onsubmit="sendEmail(event)">
             <div class="mb-4">
               <input type="text" class="form-control" id="name" placeholder="Nama" required pattern="[A-Za-z\s]{3,}">
               </div>
@@ -203,52 +203,7 @@
     </div>
   </div>
 
-  <!-- Script untuk Toggle Sidebar dan Scroll Effect -->
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.style.display = sidebar.style.display === "flex" ? "none" : "flex";
-    }
-    
-    window.onscroll = function() {
-      const header = document.getElementById("main-header");
-      if (window.scrollY > 50) {
-        header.classList.add("scrolled");
-      } else {
-        header.classList.remove("scrolled");
-      }
-    };
-    // Loading screen
-    window.addEventListener('load', () => {
-      document.getElementById('loading').style.display = 'none';
-    });
-
-    // dark mode
-    const toggle = document.getElementById('darkModeToggle');
-    const icon = document.getElementById('darkModeIcon');
-    const body = document.body;
-
-    // Cek jika pengguna pernah menyimpan preferensi dark mode
-    if (localStorage.getItem('dark-mode') === 'enabled') {
-      body.classList.add('dark-mode');
-      icon.classList.remove('fa-moon');
-      icon.classList.add('fa-sun');
-    }
-
-    toggle.addEventListener('click', () => {
-      if (body.classList.contains('dark-mode')) {
-        body.classList.remove('dark-mode');
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-        localStorage.setItem('dark-mode', 'disabled');
-      } else {
-        body.classList.add('dark-mode');
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-        localStorage.setItem('dark-mode', 'enabled');
-      }
-    });
-
-  </script>
+  <script src="static/js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </body>
 </html>
