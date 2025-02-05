@@ -99,40 +99,48 @@ document.addEventListener("DOMContentLoaded", () => {
 // Ambil data transaksi saat halaman dimuat
 document.addEventListener("DOMContentLoaded", function() {
     // Fungsi untuk mengambil data transaksi
-    const getTransactions = async (date = '') => { // Remove status parameter
-        try {
-            let url = 'https://laundry-pos-ten.vercel.app/transactions';
-            if (date) { // Remove status check
-                url += `?date=${date}`; // Remove status from query
-            }
-            
-            let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-            if (token && !token.startsWith('Bearer ')) {
-                token = 'Bearer ' + token;  // Menambahkan 'Bearer ' jika belum ada
-            }
+// Fungsi untuk memfilter transaksi berdasarkan tanggal
+window.filterOrders = () => {
+    const selectedDate = document.getElementById('filterDate').value;
+    getTransactions(selectedDate);
+};
 
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': token // Menambahkan token dalam header Authorization
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Gagal memuat transaksi: ${response.statusText}`);
-            }
-
-            const transactions = await response.json();
-            renderTransactions(transactions);
-        } catch (error) {
-            if (error.name === 'TypeError') {
-                console.error('Network error:', error.message);
-                alert('Terjadi kesalahan jaringan saat memuat data transaksi');
-            } else {
-                console.error('Error fetching transactions:', error.message);
-                alert('Terjadi kesalahan saat memuat data transaksi');
-            }
+// Update fungsi getTransactions untuk menerima tanggal
+const getTransactions = async (date = '') => {
+    try {
+        let url = 'https://laundry-pos-ten.vercel.app/transactions';
+        if (date) {
+            url += `?date=${date}`;
         }
-    };
+
+        let token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        if (token && !token.startsWith('Bearer ')) {
+            token = 'Bearer ' + token;
+        }
+
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': token
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Gagal memuat transaksi: ${response.statusText}`);
+        }
+
+        const transactions = await response.json();
+        renderTransactions(transactions);
+    } catch (error) {
+        console.error('Error fetching transactions:', error.message);
+        alert('Terjadi kesalahan saat memuat data transaksi');
+    }
+};
+
+// Ambil data transaksi saat halaman dimuat
+document.addEventListener("DOMContentLoaded", function() {
+    getTransactions(); // Panggil tanpa filter saat halaman pertama kali dimuat
+});
+
 
     // Fungsi untuk menghapus transaksi
     window.deleteTransaction = async (transactionId) => {
