@@ -7,7 +7,7 @@ import { StatusBadge } from "../components/StatusBadge.jsx";
 import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 
 export default function Payments() {
-  useTitle("Pembayaran: LaundryPOS");
+  useTitle("Pembayaran: BubbleWash");
   const [page, setPage] = useState(1);
   const { data, meta, loading, error, retry } = useApi(`/payments?page=${page}&limit=15`);
 

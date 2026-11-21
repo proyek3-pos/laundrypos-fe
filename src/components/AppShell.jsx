@@ -50,8 +50,8 @@ export function AppShell() {
     <div className="min-h-dvh">
       <aside className="no-print fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-surface md:flex">
         <div className="flex items-center gap-2.5 px-5 pb-4 pt-5">
-          <img src={import.meta.env.BASE_URL + "logo.png"} alt="Logo LaundryPOS" className="h-9 w-9" width={36} height={36} />
-          <span className="text-lg font-extrabold tracking-tight">LaundryPOS</span>
+          <img src={import.meta.env.BASE_URL + "icon.png"} alt="Ikon BubbleWash" className="h-9 w-auto" width={36} height={36} />
+          <span className="text-lg font-extrabold tracking-tight">BubbleWash</span>
         </div>
         <nav className="flex-1 space-y-1 px-3" aria-label="Menu utama">
           {items.map((n) => (
@@ -94,8 +94,8 @@ export function AppShell() {
 
       <header className="no-print sticky top-0 z-30 flex items-center justify-between border-b border-line bg-surface px-4 py-3 md:hidden">
         <div className="flex items-center gap-2">
-          <img src={import.meta.env.BASE_URL + "logo.png"} alt="Logo LaundryPOS" className="h-8 w-8" width={32} height={32} />
-          <span className="font-extrabold">LaundryPOS</span>
+          <img src={import.meta.env.BASE_URL + "icon.png"} alt="Ikon BubbleWash" className="h-8 w-auto" width={32} height={32} />
+          <span className="font-extrabold">BubbleWash</span>
         </div>
         <div className="flex items-center gap-1">
           {extraItems.length > 0 && (

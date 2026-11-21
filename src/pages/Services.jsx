@@ -10,7 +10,7 @@ import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 const emptyForm = { id: null, serviceName: "", description: "", unitPrice: "", unit: "kg" };
 
 export default function Services() {
-  useTitle("Layanan: LaundryPOS");
+  useTitle("Layanan: BubbleWash");
   const toast = useToast();
   const { data, loading, error, retry } = useApi("/services");
   const [form, setForm] = useState(null);

@@ -9,7 +9,7 @@ import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 // Job layar ini: kasir pemilik mau tahu "berapa masuk hari ini, apa yang belum lunas".
 // Angka hanya dari /reports/summary, tanpa delta yang tidak dihitung dari data.
 export default function Dashboard() {
-  useTitle("Dashboard: LaundryPOS");
+  useTitle("Dashboard: BubbleWash");
   const { data: sum, loading, error, retry } = useApi("/reports/summary");
   const { data: recent, loading: recentLoading, error: recentError, retry: recentRetry } = useApi("/transactions?limit=5");
   const toast = useToast();

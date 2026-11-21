@@ -8,7 +8,7 @@ import { StatusBadge } from "../components/StatusBadge.jsx";
 // Nota cetak 80mm. Motif gelombang sabun ada di header nota (DESIGN.md).
 export default function Receipt() {
   const { id } = useParams();
-  useTitle("Nota: LaundryPOS");
+  useTitle("Nota: BubbleWash");
   const { data: tx, loading, error, retry } = useApi(`/transactions/${id}`);
 
   if (loading) return <Loading label="Memuat nota" />;
@@ -43,7 +43,7 @@ export default function Receipt() {
           </svg>
         </div>
         <div className="mt-2 text-center">
-          <p className="text-lg font-extrabold">LaundryPOS</p>
+          <p className="text-lg font-extrabold">BubbleWash</p>
           <p className="text-xs text-muted">Nota pesanan laundry</p>
         </div>
         <div className="mt-4 space-y-1 border-y border-dashed border-line py-3 text-sm">

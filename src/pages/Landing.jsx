@@ -33,14 +33,14 @@ const STEPS = [
 ];
 
 export default function Landing() {
-  useTitle("LaundryPOS: kasir laundry yang ringan dipakai");
+  useTitle("BubbleWash: kasir laundry yang ringan dipakai");
   return (
     <div className="min-h-dvh bg-bg">
       <header className="no-print sticky top-0 z-30 border-b border-line bg-surface">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-2.5">
-            <img src={import.meta.env.BASE_URL + "logo.png"} alt="Logo LaundryPOS" className="h-8 w-8" width={32} height={32} />
-            <span className="font-extrabold">LaundryPOS</span>
+            <img src={import.meta.env.BASE_URL + "icon.png"} alt="Ikon BubbleWash" className="h-8 w-auto" width={32} height={32} />
+            <span className="font-extrabold">BubbleWash</span>
           </div>
           <nav className="flex items-center gap-2" aria-label="Menu beranda">
             <Link to="/login" className="inline-flex min-h-11 items-center px-4 font-bold text-primary dark:text-sky-300 hover:underline">
@@ -90,7 +90,7 @@ export default function Landing() {
             <div>
               <h2 className="text-3xl font-extrabold tracking-tight">Semua yang kasir butuh, tanpa fitur lepas</h2>
               <p className="mt-3 text-muted">
-                LaundryPOS dibangun untuk alur kerja laundry: terima, timbang, bayar, serahkan. Tidak ada menu yang
+                BubbleWash dibangun untuk alur kerja laundry: terima, timbang, bayar, serahkan. Tidak ada menu yang
                 tidak terpakai.
               </p>
             </div>
@@ -147,7 +147,7 @@ export default function Landing() {
 
       <footer className="border-t border-line bg-surface">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-6">
-          <p className="text-sm text-muted">LaundryPOS, aplikasi kasir untuk usaha laundry.</p>
+          <p className="text-sm text-muted">BubbleWash, aplikasi kasir untuk usaha laundry.</p>
           <nav className="flex gap-4 text-sm font-bold" aria-label="Tautan footer">
             <Link to="/login" className="text-primary dark:text-sky-300 hover:underline">
               Masuk

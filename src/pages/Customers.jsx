@@ -11,7 +11,7 @@ import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 const emptyForm = { id: null, fullName: "", phoneNumber: "", email: "" };
 
 export default function Customers() {
-  useTitle("Pelanggan: LaundryPOS");
+  useTitle("Pelanggan: BubbleWash");
   const toast = useToast();
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");

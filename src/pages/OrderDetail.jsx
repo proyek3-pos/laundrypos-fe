@@ -19,7 +19,7 @@ const NEXT = {
 
 export default function OrderDetail() {
   const { id } = useParams();
-  useTitle("Detail pesanan: LaundryPOS");
+  useTitle("Detail pesanan: BubbleWash");
   const { data: tx, loading, error, retry } = useApi(`/transactions/${id}`);
   const toast = useToast();
 

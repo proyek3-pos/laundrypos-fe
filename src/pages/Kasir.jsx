@@ -9,7 +9,7 @@ import { useToast } from "../components/Toast.jsx";
 import { ErrorState, Loading } from "../components/StateViews.jsx";
 
 export default function Kasir() {
-  useTitle("Kasir: LaundryPOS");
+  useTitle("Kasir: BubbleWash");
   const navigate = useNavigate();
   const toast = useToast();
 

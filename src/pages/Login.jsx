@@ -8,7 +8,7 @@ import { Wave } from "../components/Wave.jsx";
 import { useTitle } from "../hooks/useApi.js";
 
 export default function Login() {
-  useTitle("Masuk: LaundryPOS");
+  useTitle("Masuk: BubbleWash");
   const { user, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,8 +44,8 @@ export default function Login() {
       <div className="w-full max-w-sm">
         <div className="overflow-hidden rounded-[14px] border border-line bg-surface shadow-lg">
           <div className="bg-primary-soft pt-6 text-center">
-            <img src={import.meta.env.BASE_URL + "logo.png"} alt="Logo LaundryPOS" className="mx-auto h-14 w-14" width={56} height={56} />
-            <h1 className="mt-3 text-xl font-extrabold">Masuk ke LaundryPOS</h1>
+            <img src={import.meta.env.BASE_URL + "icon.png"} alt="Ikon BubbleWash" className="mx-auto h-14 w-auto" width={56} height={56} />
+            <h1 className="mt-3 text-xl font-extrabold">Masuk ke BubbleWash</h1>
             <p className="mt-1 pb-4 px-6 text-sm text-muted">Kelola pesanan dan kasir laundry dalam satu tempat.</p>
             <div className="text-surface">
               <Wave />

@@ -11,7 +11,7 @@ import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 const STATUSES = ["", "pending", "diproses", "selesai", "diambil", "batal"];
 
 export default function Orders() {
-  useTitle("Pesanan: LaundryPOS");
+  useTitle("Pesanan: BubbleWash");
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("");
   const [q, setQ] = useState("");

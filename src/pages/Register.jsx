@@ -8,7 +8,7 @@ import { useToast } from "../components/Toast.jsx";
 import { useTitle } from "../hooks/useApi.js";
 
 export default function Register() {
-  useTitle("Daftar: LaundryPOS");
+  useTitle("Daftar: BubbleWash");
   const { user } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
@@ -47,7 +47,7 @@ export default function Register() {
       <div className="w-full max-w-sm">
         <div className="overflow-hidden rounded-[14px] border border-line bg-surface shadow-lg">
           <div className="bg-primary-soft pt-6 text-center">
-            <img src={import.meta.env.BASE_URL + "logo.png"} alt="Logo LaundryPOS" className="mx-auto h-14 w-14" width={56} height={56} />
+            <img src={import.meta.env.BASE_URL + "icon.png"} alt="Ikon BubbleWash" className="mx-auto h-14 w-auto" width={56} height={56} />
             <h1 className="mt-3 text-xl font-extrabold">Buat akun staf</h1>
             <p className="mt-1 px-6 pb-4 text-sm text-muted">Akun baru otomatis berperan sebagai staf kasir.</p>
             <div className="text-surface">
