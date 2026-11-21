@@ -31,15 +31,17 @@ export default function OrderDetail() {
   if (!tx) return null;
 
   const move = async (status) => {
-    if (status === "batal") {
-      const ok = await swalConfirm({
-        title: "Batalkan pesanan?",
-        text: "Pesanan yang dibatalkan tidak bisa dibayar dan tidak bisa lanjut diproses.",
-        confirmText: "Ya, batalkan",
-        danger: true,
-      });
-      if (!ok) return;
-    }
+    // Validasi + konfirmasi sebelum tiap perubahan status.
+    const ok = await swalConfirm({
+      title: "Ubah status pesanan?",
+      text:
+        status === "batal"
+          ? "Pesanan yang dibatalkan tidak bisa dibayar dan tidak bisa lanjut diproses."
+          : `Pesanan akan ditandai "${STATUS_LABELS[status]}".`,
+      confirmText: `Ya, tandai ${STATUS_LABELS[status]}`,
+      danger: status === "batal",
+    });
+    if (!ok) return;
     setBusy(true);
     try {
       await api.patch(`/transactions/${tx.id}/status`, { status });

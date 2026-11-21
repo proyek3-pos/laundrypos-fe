@@ -4,7 +4,7 @@ import { api, formatRp } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Modal } from "../components/Modal.jsx";
-import { swalConfirm, swalErr, swalOk, swalWarn } from "../lib/swal.js";
+import { swalConfirm, swalErr, swalOk, swalValidasi } from "../lib/swal.js";
 import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 
 const emptyForm = { id: null, serviceName: "", description: "", unitPrice: "", unit: "kg" };
@@ -17,9 +17,12 @@ export default function Services() {
 
   const save = async (e) => {
     e.preventDefault();
+    const errors = [];
+    if (form.serviceName.trim().length < 2) errors.push("Nama layanan minimal 2 karakter.");
     const price = Number(String(form.unitPrice).replace(",", "."));
-    if (!price || price <= 0) {
-      swalWarn("Harga harus lebih dari 0.");
+    if (!price || price <= 0) errors.push("Harga harus lebih dari 0.");
+    if (errors.length > 0) {
+      swalValidasi(errors);
       return;
     }
     setBusy(true);

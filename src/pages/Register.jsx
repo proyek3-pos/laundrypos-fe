@@ -4,7 +4,7 @@ import { api } from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Wave } from "../components/Wave.jsx";
-import { swalErr, swalOk, swalWarn } from "../lib/swal.js";
+import { swalErr, swalOk, swalValidasi } from "../lib/swal.js";
 import { useTitle } from "../hooks/useApi.js";
 
 export default function Register() {
@@ -19,12 +19,11 @@ export default function Register() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!username || !password) {
-      swalWarn("Isi username dan password dulu.");
-      return;
-    }
-    if (password.length < 8) {
-      swalWarn("Password minimal 8 karakter.");
+    const errors = [];
+    if (!username.trim() || !password) errors.push("Isi username dan password dulu.");
+    else if (password.length < 8) errors.push("Password minimal 8 karakter.");
+    if (errors.length > 0) {
+      swalValidasi(errors);
       return;
     }
     setBusy(true);

@@ -36,6 +36,17 @@ export function swalWarn(message) {
   });
 }
 
+// Daftar masalah validasi dalam satu dialog; errors = array string.
+export function swalValidasi(errors) {
+  const items = errors.map((e) => `<li>${e}</li>`).join("");
+  return base.fire({
+    icon: "warning",
+    title: "Lengkapi dulu",
+    html: `<ul style="list-style:disc;text-align:left;padding-left:1.25rem;margin:0">${items}</ul>`,
+    confirmButtonText: "Oke",
+  });
+}
+
 // confirm = true kalau user menyetujui aksi.
 export function swalConfirm({ title, text, confirmText = "Ya, lanjut", danger = false }) {
   return base

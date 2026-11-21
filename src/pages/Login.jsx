@@ -5,7 +5,7 @@ import { api } from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Wave } from "../components/Wave.jsx";
-import { swalErr, swalWarn } from "../lib/swal.js";
+import { swalErr, swalValidasi, swalWarn } from "../lib/swal.js";
 import { useTitle } from "../hooks/useApi.js";
 
 export default function Login() {
@@ -22,8 +22,8 @@ export default function Login() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!username || !password) {
-      swalWarn("Isi username dan password dulu.");
+    if (!username.trim() || !password) {
+      swalValidasi(["Isi username dan password dulu."]);
       return;
     }
     setBusy(true);

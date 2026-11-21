@@ -5,7 +5,7 @@ import { useApi, useTitle } from "../hooks/useApi.js";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Modal } from "../components/Modal.jsx";
 import { Pagination } from "../components/Pagination.jsx";
-import { swalConfirm, swalErr, swalOk, swalWarn } from "../lib/swal.js";
+import { swalConfirm, swalErr, swalOk, swalValidasi } from "../lib/swal.js";
 import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 
 const emptyForm = { id: null, fullName: "", phoneNumber: "", email: "" };
@@ -32,6 +32,14 @@ export default function Customers() {
 
   const save = async (e) => {
     e.preventDefault();
+    const errors = [];
+    if (form.fullName.trim().length < 2) errors.push("Nama minimal 2 karakter.");
+    if (!/^\+?[0-9]{8,15}$/.test(form.phoneNumber)) errors.push("Nomor telepon 8-15 digit, mis. 081234567890.");
+    if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) errors.push("Format email tidak valid.");
+    if (errors.length > 0) {
+      swalValidasi(errors);
+      return;
+    }
     setBusy(true);
     try {
       if (form.id) {

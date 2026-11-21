@@ -5,7 +5,7 @@ import { api, formatRp } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Modal } from "../components/Modal.jsx";
-import { swalErr, swalOk, swalWarn } from "../lib/swal.js";
+import { swalErr, swalOk, swalValidasi, swalWarn } from "../lib/swal.js";
 import { ErrorState, Loading } from "../components/StateViews.jsx";
 
 export default function Kasir() {
@@ -62,6 +62,13 @@ export default function Kasir() {
 
   const quickAdd = async (e) => {
     e.preventDefault();
+    const errors = [];
+    if (newName.trim().length < 2) errors.push("Nama minimal 2 karakter.");
+    if (!/^\+?[0-9]{8,15}$/.test(newPhone)) errors.push("Nomor telepon 8-15 digit, mis. 081234567890.");
+    if (errors.length > 0) {
+      swalValidasi(errors);
+      return;
+    }
     try {
       const res = await api.post("/customers", { fullName: newName, phoneNumber: newPhone, email: "" });
       setCustomer(res.data);
@@ -115,16 +122,15 @@ export default function Kasir() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!customer) {
-      swalWarn("Pilih pelanggan dulu.");
-      return;
+    const errors = [];
+    if (!customer) errors.push("Pilih pelanggan dulu.");
+    if (cart.length === 0) errors.push("Tambahkan minimal satu item.");
+    if (method === "cash") {
+      if (amountPaid === "") errors.push("Isi uang diterima dulu.");
+      else if (paid < total) errors.push(`Uang diterima kurang ${formatRp(total - paid)}.`);
     }
-    if (cart.length === 0) {
-      swalWarn("Tambahkan minimal satu item.");
-      return;
-    }
-    if (method === "cash" && paid < total) {
-      swalWarn("Uang diterima kurang dari total.");
+    if (errors.length > 0) {
+      swalValidasi(errors);
       return;
     }
     setBusy(true);
@@ -367,7 +373,7 @@ export default function Kasir() {
           )}
           <button
             type="submit"
-            disabled={busy || !customer || cart.length === 0}
+            disabled={busy}
             className="mt-4 min-h-11 w-full rounded-input bg-accent px-4 font-extrabold text-ink hover:bg-accent-deep hover:text-white disabled:opacity-50"
           >
             {busy ? "Menyimpan..." : "Buat Pesanan"}
