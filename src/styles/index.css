@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+/* Palet & type dari DESIGN.md (2 core + 1 accent). */
+@theme {
+  --color-primary: #0e7490;
+  --color-primary-deep: #155e75;
+  --color-primary-soft: #e3f2f6;
+  --color-accent: #f97066;
+  --color-accent-deep: #d9453a;
+  --color-bg: #fafaf8;
+  --color-surface: #ffffff;
+  --color-ink: #17303b;
+  --color-muted: #5c6b72;
+  --color-line: #e4e7e5;
+  --color-ok: #047857;
+  --color-ok-soft: #e3f4ec;
+  --color-warn: #b45309;
+  --color-warn-soft: #fdf1e2;
+  --color-danger: #b91c1c;
+  --color-danger-soft: #fbeae8;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --radius-input: 10px;
+  --radius-card: 14px;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-primary-soft: #123a46;
+  --color-bg: #0e171b;
+  --color-surface: #16242a;
+  --color-ink: #e7ecec;
+  --color-muted: #a3b6bb;
+  --color-line: #24363d;
+  --color-ok-soft: #10362a;
+  --color-warn-soft: #362a12;
+  --color-danger-soft: #3a1a18;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+  }
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+  }
+  /* Afordansi pointer: semua kontrol bisa diklik terlihat bisa diklik. */
+  a,
+  button,
+  select,
+  label,
+  summary,
+  [role="button"] {
+    cursor: pointer;
+  }
+  button:disabled,
+  a[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+@media print {
+  /* Halaman nota dicetak bersih tanpa chrome aplikasi, lebar thermal 80mm. */
+  @page {
+    size: 80mm auto;
+    margin: 5mm;
+  }
+  body {
+    background: #ffffff;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
