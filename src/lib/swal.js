@@ -47,6 +47,25 @@ export function swalValidasi(errors) {
   });
 }
 
+// Tagihan Midtrans dibuat: buka Snap lewat klik tombol dialog, bukan
+// window.open pasca-await (popup browser akan memblokirnya).
+export function swalMidtrans(snapUrl) {
+  return base.fire({
+    icon: "success",
+    title: "Tagihan Midtrans dibuat",
+    text: "Klik tombol di bawah untuk membuka halaman pembayaran di tab baru.",
+    confirmButtonText: "Buka Halaman Bayar",
+    cancelButtonText: "Nanti saja",
+    showCancelButton: true,
+  }).then((r) => {
+    if (r.isConfirmed && !window.open(snapUrl, "_blank", "noopener")) {
+      base.fire({ icon: "error", title: "Popup diblokir", text: "Buka tautan dari detail pesanan." });
+      return false;
+    }
+    return r.isConfirmed;
+  });
+}
+
 // confirm = true kalau user menyetujui aksi.
 export function swalConfirm({ title, text, confirmText = "Ya, lanjut", danger = false }) {
   return base

@@ -4,7 +4,7 @@ import { ArrowLeft, Printer } from "@phosphor-icons/react";
 import { api, formatRp, formatTanggal } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { inputClass } from "../components/Field.jsx";
-import { swalConfirm, swalErr, swalOk, swalWarn } from "../lib/swal.js";
+import { swalConfirm, swalErr, swalMidtrans, swalOk, swalWarn } from "../lib/swal.js";
 import { StatusBadge, STATUS_LABELS } from "../components/StatusBadge.jsx";
 import { ErrorState, Loading } from "../components/StateViews.jsx";
 
@@ -75,9 +75,7 @@ export default function OrderDetail() {
     try {
       const res = await api.post("/payments/midtrans", { transactionId: tx.id });
       const url = res.data?.snap_url;
-      if (url && !window.open(url, "_blank", "noopener")) {
-        swalErr("Popup diblokir browser. Izinkan popup lalu coba lagi.");
-      }
+      if (url) await swalMidtrans(url);
       retry();
     } catch (err) {
       swalErr(err.message);

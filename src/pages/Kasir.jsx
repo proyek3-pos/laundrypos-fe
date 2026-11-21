@@ -5,7 +5,7 @@ import { api, formatRp } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Modal } from "../components/Modal.jsx";
-import { swalErr, swalOk, swalValidasi, swalWarn } from "../lib/swal.js";
+import { swalErr, swalMidtrans, swalOk, swalValidasi, swalWarn } from "../lib/swal.js";
 import { ErrorState, Loading } from "../components/StateViews.jsx";
 
 export default function Kasir() {
@@ -145,9 +145,7 @@ export default function Kasir() {
       } else {
         const pay = await api.post("/payments/midtrans", { transactionId: tx.id });
         const url = pay.data?.snap_url;
-        if (url && !window.open(url, "_blank", "noopener")) {
-          swalErr("Popup pembayaran diblokir. Buka tautan dari detail pesanan.");
-        }
+        if (url) await swalMidtrans(url);
       }
       navigate(`/app/pesanan/${tx.id}/nota`);
     } catch (err) {
