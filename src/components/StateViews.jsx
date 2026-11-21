@@ -4,7 +4,7 @@ import { Wave } from "./Wave.jsx";
 export function Loading({ label = "Memuat data" }) {
   return (
     <div className="py-16 text-center" role="status">
-      <SpinnerGap size={28} className="mx-auto animate-spin text-primary" aria-hidden="true" />
+      <SpinnerGap size={28} className="mx-auto animate-spin text-primary dark:text-sky-300" aria-hidden="true" />
       <p className="mt-2 text-sm text-muted">{label}</p>
     </div>
   );
@@ -17,7 +17,7 @@ export function EmptyState({ icon, title, description, action }) {
       <div className="mx-auto mb-3 w-40 text-primary-soft">
         <Wave />
       </div>
-      {icon && <div className="mb-2 text-primary">{icon}</div>}
+      {icon && <div className="mb-2 text-primary dark:text-sky-300">{icon}</div>}
       <p className="font-semibold">{title}</p>
       {description && <p className="mx-auto mt-1 max-w-sm text-sm text-muted">{description}</p>}
       {action && <div className="mt-4">{action}</div>}

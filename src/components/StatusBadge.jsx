@@ -1,5 +1,5 @@
 const STATUS_STYLES = {
-  pending: "bg-primary-soft text-primary-deep",
+  pending: "bg-primary-soft text-primary-deep dark:text-white",
   diproses: "bg-warn-soft text-warn",
   selesai: "bg-ok-soft text-ok",
   diambil: "bg-surface text-muted border border-line",

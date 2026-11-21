@@ -18,6 +18,7 @@ export default function Kasir() {
   const [customer, setCustomer] = useState(null);
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
@@ -39,15 +40,20 @@ export default function Kasir() {
   useEffect(() => {
     if (!search.trim()) {
       setResults([]);
+      setSearchError(false);
       return;
     }
     const t = setTimeout(async () => {
       setSearching(true);
+      setSearchError(false);
       try {
         const res = await api.get(`/customers?limit=5&q=${encodeURIComponent(search.trim())}`);
         setResults(res.data ?? []);
       } catch {
+        // Bedakan gagal-jaringan dari "tidak ada hasil": kasir tidak harus
+        // menyangka pelanggan belum terdaftar padahal server tak terjangkau.
         setResults([]);
+        setSearchError(true);
       } finally {
         setSearching(false);
       }
@@ -161,7 +167,7 @@ export default function Kasir() {
                   <p className="font-bold">{customer.fullName}</p>
                   <p className="text-xs text-muted">{customer.phoneNumber}</p>
                 </div>
-                <button type="button" onClick={() => setCustomer(null)} className="font-bold text-primary-deep hover:underline">
+                <button type="button" onClick={() => setCustomer(null)} className="font-bold text-primary-deep dark:text-white hover:underline">
                   Ganti
                 </button>
               </div>
@@ -199,10 +205,15 @@ export default function Kasir() {
                     ))}
                   </ul>
                 )}
-                {search.trim() && !searching && results.length === 0 && (
+                {search.trim() && !searching && results.length === 0 && searchError && (
+                  <p className="mt-2 text-sm font-semibold text-danger" role="alert">
+                    Gagal mencari. Periksa koneksi internet lalu coba lagi.
+                  </p>
+                )}
+                {search.trim() && !searching && results.length === 0 && !searchError && (
                   <p className="mt-2 text-sm text-muted">
                     Tidak ada yang cocok.{" "}
-                    <button type="button" onClick={() => setAddOpen(true)} className="font-bold text-primary hover:underline">
+                    <button type="button" onClick={() => setAddOpen(true)} className="font-bold text-primary dark:text-sky-300 hover:underline">
                       Tambah pelanggan baru
                     </button>
                   </p>
@@ -211,7 +222,7 @@ export default function Kasir() {
                   <button
                     type="button"
                     onClick={() => setAddOpen(true)}
-                    className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:underline"
+                    className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primary dark:text-sky-300 hover:underline"
                   >
                     <UserPlus size={18} aria-hidden="true" /> Pelanggan belum terdaftar? Tambah cepat
                   </button>
@@ -309,8 +320,8 @@ export default function Kasir() {
               ].map((m) => (
                 <label
                   key={m.v}
-                  className={`flex min-h-11 cursor-pointer items-center justify-center rounded-input border px-3 font-semibold has-[:checked]:border-primary has-[:checked]:bg-primary-soft has-[:checked]:text-primary-deep ${
-                    method === m.v ? "border-primary bg-primary-soft text-primary-deep" : "border-line bg-surface text-ink"
+                  className={`flex min-h-11 cursor-pointer items-center justify-center rounded-input border px-3 font-semibold has-[:checked]:border-primary has-[:checked]:bg-primary-soft has-[:checked]:text-primary-deep dark:has-[:checked]:text-white ${
+                    method === m.v ? "border-primary bg-primary-soft text-primary-deep dark:text-white" : "border-line bg-surface text-ink"
                   }`}
                 >
                   <input
@@ -351,7 +362,7 @@ export default function Kasir() {
               )}
             </div>
           ) : (
-            <p className="mt-4 rounded-input bg-primary-soft px-3 py-2.5 text-sm text-primary-deep">
+            <p className="mt-4 rounded-input bg-primary-soft px-3 py-2.5 text-sm text-primary-deep dark:text-white">
               Setelah pesanan dibuat, halaman pembayaran Midtrans terbuka di tab baru.
             </p>
           )}

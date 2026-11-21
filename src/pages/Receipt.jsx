@@ -24,7 +24,7 @@ export default function Receipt() {
   return (
     <div className="mx-auto max-w-sm">
       <div className="no-print mb-4 flex items-center justify-between">
-        <Link to={`/app/pesanan/${tx.id}`} className="inline-flex min-h-11 items-center gap-2 font-bold text-primary hover:underline">
+        <Link to={`/app/pesanan/${tx.id}`} className="inline-flex min-h-11 items-center gap-2 font-bold text-primary dark:text-sky-300 hover:underline">
           <ArrowLeft size={18} aria-hidden="true" /> Kembali ke pesanan
         </Link>
         <button
@@ -37,7 +37,7 @@ export default function Receipt() {
       </div>
 
       <article className="rounded-[14px] border border-line bg-surface p-5 shadow-sm print:rounded-none print:border-0 print:shadow-none">
-        <div className="text-primary">
+        <div className="text-primary dark:text-sky-300">
           <svg viewBox="0 0 1440 32" preserveAspectRatio="none" className="h-4 w-full" aria-hidden="true" focusable="false">
             <path d="M0 16 C 240 32 480 0 720 12 C 960 24 1200 8 1440 16 L1440 32 L0 32 Z" fill="currentColor" />
           </svg>

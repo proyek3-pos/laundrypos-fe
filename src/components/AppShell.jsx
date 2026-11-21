@@ -60,7 +60,7 @@ export function AppShell() {
               to={n.to}
               className={({ isActive }) =>
                 `flex min-h-11 items-center gap-3 rounded-[10px] px-3 font-semibold ${
-                  isActive ? "bg-primary-soft text-primary-deep" : "text-ink hover:bg-primary-soft"
+                  isActive ? "bg-primary-soft text-primary-deep dark:text-white" : "text-ink hover:bg-primary-soft"
                 }`
               }
             >
@@ -144,7 +144,7 @@ export function AppShell() {
             to={n.to}
             className={({ isActive }) =>
               `flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold ${
-                isActive ? "text-primary-deep" : "text-muted"
+                isActive ? "text-primary-deep dark:text-white" : "text-muted"
               }`
             }
           >

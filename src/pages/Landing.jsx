@@ -43,7 +43,7 @@ export default function Landing() {
             <span className="font-extrabold">LaundryPOS</span>
           </div>
           <nav className="flex items-center gap-2" aria-label="Menu beranda">
-            <Link to="/login" className="inline-flex min-h-11 items-center px-4 font-bold text-primary hover:underline">
+            <Link to="/login" className="inline-flex min-h-11 items-center px-4 font-bold text-primary dark:text-sky-300 hover:underline">
               Masuk
             </Link>
             <Link
@@ -120,7 +120,7 @@ export default function Landing() {
             <ol className="mt-8 grid gap-4 sm:grid-cols-3">
               {STEPS.map((s, i) => (
                 <li key={s.title} className="rounded-[14px] border border-line bg-surface p-5">
-                  <p className="text-sm font-extrabold text-primary-deep">Langkah {i + 1}</p>
+                  <p className="text-sm font-extrabold text-primary-deep dark:text-sky-300">Langkah {i + 1}</p>
                   <h3 className="mt-1 font-bold">{s.title}</h3>
                   <p className="mt-1 text-sm text-muted">{s.desc}</p>
                 </li>
@@ -137,7 +137,7 @@ export default function Landing() {
             </p>
             <Link
               to="/login"
-              className="mt-6 inline-flex min-h-11 items-center rounded-input bg-surface px-6 font-extrabold text-primary-deep hover:bg-primary-soft"
+              className="mt-6 inline-flex min-h-11 items-center rounded-input bg-surface px-6 font-extrabold text-primary-deep dark:text-sky-300 hover:bg-primary-soft"
             >
               Masuk ke Kasir
             </Link>
@@ -149,10 +149,10 @@ export default function Landing() {
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-6">
           <p className="text-sm text-muted">LaundryPOS, aplikasi kasir untuk usaha laundry.</p>
           <nav className="flex gap-4 text-sm font-bold" aria-label="Tautan footer">
-            <Link to="/login" className="text-primary hover:underline">
+            <Link to="/login" className="text-primary dark:text-sky-300 hover:underline">
               Masuk
             </Link>
-            <Link to="/register" className="text-primary hover:underline">
+            <Link to="/register" className="text-primary dark:text-sky-300 hover:underline">
               Daftar
             </Link>
           </nav>

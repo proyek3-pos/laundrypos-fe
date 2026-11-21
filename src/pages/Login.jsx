@@ -100,11 +100,11 @@ export default function Login() {
         </div>
         <p className="mt-4 text-center text-sm text-muted">
           Belum punya akun?{" "}
-          <Link to="/register" className="font-bold text-primary hover:text-primary-deep">
+          <Link to="/register" className="font-bold text-primary dark:text-sky-300 hover:text-primary-deep">
             Daftar
           </Link>{" "}
           atau{" "}
-          <Link to="/" className="font-bold text-primary hover:text-primary-deep">
+          <Link to="/" className="font-bold text-primary dark:text-sky-300 hover:text-primary-deep">
             kembali ke beranda
           </Link>
         </p>

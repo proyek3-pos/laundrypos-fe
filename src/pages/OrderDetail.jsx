@@ -79,7 +79,7 @@ export default function OrderDetail() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link to="/app/pesanan" className="inline-flex min-h-11 items-center gap-2 font-bold text-primary hover:underline">
+        <Link to="/app/pesanan" className="inline-flex min-h-11 items-center gap-2 font-bold text-primary dark:text-sky-300 hover:underline">
           <ArrowLeft size={18} aria-hidden="true" /> Semua pesanan
         </Link>
         <Link
@@ -162,7 +162,11 @@ export default function OrderDetail() {
         <aside className="h-fit space-y-4 rounded-[14px] border border-line bg-surface p-4 sm:p-5 lg:sticky lg:top-5">
           <div>
             <h2 className="font-bold">Pembayaran</h2>
-            {tx.paymentStatus === "paid" ? (
+            {tx.status === "batal" ? (
+              <p className="mt-2 rounded-input bg-danger-soft px-3 py-2.5 text-sm text-danger">
+                Pesanan dibatalkan, pembayaran ditutup.
+              </p>
+            ) : tx.paymentStatus === "paid" ? (
               <div className="mt-2 rounded-input bg-ok-soft px-3 py-2.5 text-sm text-ok">
                 <p className="font-bold">Lunas</p>
                 <p>

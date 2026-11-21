@@ -45,7 +45,7 @@ export default function Payments() {
                   <span className="font-extrabold tabular-nums">{formatRp(p.gross_amount)}</span>
                   <Link
                     to={`/app/pesanan/${p.transactionId}`}
-                    className="font-bold text-primary hover:underline"
+                    className="font-bold text-primary dark:text-sky-300 hover:underline"
                     aria-label={`Lihat pesanan untuk pembayaran ${p.gross_amount}`}
                   >
                     Pesanan

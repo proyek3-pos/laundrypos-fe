@@ -17,6 +17,7 @@
   --color-warn: #b45309;
   --color-warn-soft: #fdf1e2;
   --color-danger: #b91c1c;
+  --color-danger-deep: #b91c1c;
   --color-danger-soft: #fbeae8;
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --radius-input: 10px;
@@ -25,6 +26,8 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Token di-mode gelap diverifikasi kontrasnya dengan contrast-check.py;
+   status colors diterangkan karena soft backgrounds tetap gelap. */
 .dark {
   --color-primary-soft: #123a46;
   --color-bg: #0e171b;
@@ -32,8 +35,12 @@
   --color-ink: #e7ecec;
   --color-muted: #a3b6bb;
   --color-line: #24363d;
+  --color-ok: #34d399;
   --color-ok-soft: #10362a;
+  --color-warn: #fbbf24;
   --color-warn-soft: #362a12;
+  --color-danger: #fca5a5;
+  --color-danger-deep: #dc2626;
   --color-danger-soft: #3a1a18;
 }
 
@@ -73,13 +80,26 @@
 }
 
 @media print {
-  /* Halaman nota dicetak bersih tanpa chrome aplikasi, lebar thermal 80mm. */
+  /* Halaman nota dicetak bersih tanpa chrome aplikasi, lebar thermal 80mm.
+     Token tema di-reset ke light: di mode gelap teksnya nyaris putih di kertas. */
   @page {
     size: 80mm auto;
     margin: 5mm;
   }
   body {
     background: #ffffff;
+    color: #17303b;
+  }
+  .dark {
+    --color-primary-soft: #e3f2f6;
+    --color-bg: #ffffff;
+    --color-surface: #ffffff;
+    --color-ink: #17303b;
+    --color-muted: #5c6b72;
+    --color-line: #e4e7e5;
+    --color-ok-soft: #e3f4ec;
+    --color-warn-soft: #fdf1e2;
+    --color-danger-soft: #fbeae8;
   }
   .no-print {
     display: none !important;

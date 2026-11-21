@@ -110,7 +110,7 @@ export default function Services() {
                       setForm({ id: s.id, serviceName: s.serviceName, description: s.description || "", unitPrice: String(s.unitPrice), unit: s.unit })
                     }
                     aria-label={`Edit ${s.serviceName}`}
-                    className="inline-flex min-h-11 items-center gap-1.5 rounded-input px-3 font-semibold text-primary-deep hover:bg-primary-soft"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-input px-3 font-semibold text-primary-deep dark:text-sky-300 hover:bg-primary-soft"
                   >
                     <PencilSimple size={18} aria-hidden="true" /> Edit
                   </button>

@@ -132,7 +132,7 @@ export default function Customers() {
                     type="button"
                     onClick={() => setForm({ id: c.id, fullName: c.fullName, phoneNumber: c.phoneNumber, email: c.email })}
                     aria-label={`Edit ${c.fullName}`}
-                    className="inline-flex min-h-11 items-center gap-1.5 rounded-input px-3 font-semibold text-primary-deep hover:bg-primary-soft"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-input px-3 font-semibold text-primary-deep dark:text-sky-300 hover:bg-primary-soft"
                   >
                     <PencilSimple size={18} aria-hidden="true" /> Edit
                   </button>
