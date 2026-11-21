@@ -4,7 +4,8 @@ import { ArrowLeft, Printer } from "@phosphor-icons/react";
 import { api, formatRp, formatTanggal } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { inputClass } from "../components/Field.jsx";
-import { swalConfirm, swalErr, swalMidtrans, swalOk, swalWarn } from "../lib/swal.js";
+import { swalConfirm, swalErr, swalOk, swalWarn } from "../lib/swal.js";
+import { bayarMidtrans } from "../lib/midtrans.js";
 import { StatusBadge, STATUS_LABELS } from "../components/StatusBadge.jsx";
 import { ErrorState, Loading } from "../components/StateViews.jsx";
 
@@ -74,8 +75,8 @@ export default function OrderDetail() {
     setBusy(true);
     try {
       const res = await api.post("/payments/midtrans", { transactionId: tx.id });
-      const url = res.data?.snap_url;
-      if (url) await swalMidtrans(url);
+      const token = res.data?.snap_token;
+      if (token) await bayarMidtrans(token);
       retry();
     } catch (err) {
       swalErr(err.message);

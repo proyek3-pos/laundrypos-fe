@@ -5,7 +5,8 @@ import { api, formatRp } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Modal } from "../components/Modal.jsx";
-import { swalErr, swalMidtrans, swalOk, swalValidasi, swalWarn } from "../lib/swal.js";
+import { swalErr, swalOk, swalValidasi, swalWarn } from "../lib/swal.js";
+import { bayarMidtrans } from "../lib/midtrans.js";
 import { ErrorState, Loading } from "../components/StateViews.jsx";
 
 export default function Kasir() {
@@ -144,8 +145,8 @@ export default function Kasir() {
         await api.post("/payments/cash", { transactionId: tx.id, amountPaid: paid });
       } else {
         const pay = await api.post("/payments/midtrans", { transactionId: tx.id });
-        const url = pay.data?.snap_url;
-        if (url) await swalMidtrans(url);
+        const token = pay.data?.snap_token;
+        if (token) await bayarMidtrans(token);
       }
       navigate(`/app/pesanan/${tx.id}/nota`);
     } catch (err) {
@@ -366,7 +367,7 @@ export default function Kasir() {
             </div>
           ) : (
             <p className="mt-4 rounded-input bg-primary-soft px-3 py-2.5 text-sm text-primary-deep dark:text-white">
-              Setelah pesanan dibuat, halaman pembayaran Midtrans terbuka di tab baru.
+              Setelah pesanan dibuat, popup pembayaran Midtrans muncul di atas halaman ini.
             </p>
           )}
           <button
