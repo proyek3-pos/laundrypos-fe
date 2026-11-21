@@ -3,7 +3,7 @@ import { DownloadSimple } from "@phosphor-icons/react";
 import { api, formatRp, formatTanggal } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { StatusBadge } from "../components/StatusBadge.jsx";
-import { useToast } from "../components/Toast.jsx";
+import { swalErr, swalOk, swalWarn } from "../lib/swal.js";
 import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 
 // Job layar ini: kasir pemilik mau tahu "berapa masuk hari ini, apa yang belum lunas".
@@ -12,7 +12,6 @@ export default function Dashboard() {
   useTitle("Dashboard: BubbleWash");
   const { data: sum, loading, error, retry } = useApi("/reports/summary");
   const { data: recent, loading: recentLoading, error: recentError, retry: recentRetry } = useApi("/transactions?limit=5");
-  const toast = useToast();
 
   const exportCsv = async () => {
     try {
@@ -55,9 +54,9 @@ export default function Dashboard() {
       a.download = `pesanan-${from}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-      toast(`${all.length} pesanan diekspor ke CSV.`);
+      swalOk(`${all.length} pesanan diekspor ke CSV.`);
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     }
   };
 

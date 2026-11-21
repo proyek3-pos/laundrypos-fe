@@ -14,6 +14,8 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useIdleLogout } from "../hooks/useIdleLogout.js";
+import { swalConfirm, swalInfo, swalOk } from "../lib/swal.js";
 
 const NAV = [
   { to: "/app/kasir", label: "Kasir", icon: CashRegister, admin: false },
@@ -38,9 +40,26 @@ export function AppShell() {
   };
 
   const doLogout = async () => {
+    const ok = await swalConfirm({
+      title: "Keluar dari BubbleWash?",
+      text: "Sesi kamu akan ditutup dan harus login ulang.",
+      confirmText: "Ya, keluar",
+    });
+    if (!ok) return;
     await logout();
-    navigate("/");
+    await swalOk("Berhasil keluar", "Sampai jumpa!");
+    navigate("/login");
   };
+
+  // Diam 15 menit = sesi ditutup otomatis.
+  useIdleLogout(async () => {
+    await swalInfo(
+      "Sesi berakhir",
+      "Kamu tidak ada aktivitas selama 15 menit, jadi kami logout dulu. Silakan login ulang.",
+    );
+    await logout();
+    navigate("/login");
+  });
 
   const items = NAV.filter((n) => !n.admin || isAdmin);
   const mainItems = items.slice(0, 4);

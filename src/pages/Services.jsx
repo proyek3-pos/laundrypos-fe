@@ -4,24 +4,22 @@ import { api, formatRp } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Modal } from "../components/Modal.jsx";
-import { useToast } from "../components/Toast.jsx";
+import { swalConfirm, swalErr, swalOk, swalWarn } from "../lib/swal.js";
 import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 
 const emptyForm = { id: null, serviceName: "", description: "", unitPrice: "", unit: "kg" };
 
 export default function Services() {
   useTitle("Layanan: BubbleWash");
-  const toast = useToast();
   const { data, loading, error, retry } = useApi("/services");
   const [form, setForm] = useState(null);
-  const [toDelete, setToDelete] = useState(null);
   const [busy, setBusy] = useState(false);
 
   const save = async (e) => {
     e.preventDefault();
     const price = Number(String(form.unitPrice).replace(",", "."));
     if (!price || price <= 0) {
-      toast("Harga harus lebih dari 0.", "error");
+      swalWarn("Harga harus lebih dari 0.");
       return;
     }
     setBusy(true);
@@ -29,29 +27,35 @@ export default function Services() {
       const body = { serviceName: form.serviceName, description: form.description, unitPrice: price, unit: form.unit };
       if (form.id) {
         await api.put(`/services/${form.id}`, body);
-        toast("Layanan diperbarui.");
+        swalOk("Layanan diperbarui.");
       } else {
         await api.post("/services", body);
-        toast("Layanan ditambahkan.");
+        swalOk("Layanan ditambahkan.");
       }
       setForm(null);
       retry();
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
   };
 
-  const remove = async () => {
+  const remove = async (s) => {
+    const ok = await swalConfirm({
+      title: "Hapus layanan?",
+      text: `Layanan ${s.serviceName} tidak akan muncul lagi di kasir. Pesanan lama yang memakai layanan ini tetap tersimpan.`,
+      confirmText: "Ya, hapus",
+      danger: true,
+    });
+    if (!ok) return;
     setBusy(true);
     try {
-      await api.del(`/services/${toDelete.id}`);
-      toast("Layanan dihapus.");
-      setToDelete(null);
+      await api.del(`/services/${s.id}`);
+      await swalOk("Layanan dihapus.");
       retry();
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
@@ -116,7 +120,7 @@ export default function Services() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setToDelete(s)}
+                    onClick={() => remove(s)}
                     aria-label={`Hapus ${s.serviceName}`}
                     className="inline-flex min-h-11 items-center gap-1.5 rounded-input px-3 font-semibold text-danger hover:bg-danger-soft"
                   >
@@ -180,33 +184,6 @@ export default function Services() {
         )}
       </Modal>
 
-      <Modal open={toDelete !== null} onClose={() => setToDelete(null)} title="Hapus layanan?">
-        {toDelete && (
-          <div>
-            <p className="text-sm text-muted">
-              Layanan <span className="font-bold text-ink">{toDelete.serviceName}</span> tidak akan muncul lagi di kasir.
-              Pesanan lama yang memakai layanan ini tetap tersimpan.
-            </p>
-            <div className="mt-4 flex gap-2">
-              <button
-                type="button"
-                disabled={busy}
-                onClick={remove}
-                className="min-h-11 flex-1 rounded-input bg-danger px-4 font-bold text-white hover:opacity-90 disabled:opacity-60"
-              >
-                Hapus
-              </button>
-              <button
-                type="button"
-                onClick={() => setToDelete(null)}
-                className="min-h-11 rounded-input border border-line px-4 font-bold text-ink hover:bg-primary-soft"
-              >
-                Batal
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
     </div>
   );
 }

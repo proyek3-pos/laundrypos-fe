@@ -5,13 +5,12 @@ import { api, formatRp } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Modal } from "../components/Modal.jsx";
-import { useToast } from "../components/Toast.jsx";
+import { swalErr, swalOk, swalWarn } from "../lib/swal.js";
 import { ErrorState, Loading } from "../components/StateViews.jsx";
 
 export default function Kasir() {
   useTitle("Kasir: BubbleWash");
   const navigate = useNavigate();
-  const toast = useToast();
 
   // Pelanggan: cari yang terdaftar, atau tambah cepat kalau belum ada.
   const [search, setSearch] = useState("");
@@ -71,9 +70,9 @@ export default function Kasir() {
       setAddOpen(false);
       setNewName("");
       setNewPhone("");
-      toast("Pelanggan ditambahkan.");
+      swalOk("Pelanggan ditambahkan.");
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     }
   };
 
@@ -81,15 +80,15 @@ export default function Kasir() {
     e.preventDefault();
     const q = Number(qty.replace(",", "."));
     if (!selected) {
-      toast("Pilih layanan dulu.", "error");
+      swalWarn("Pilih layanan dulu.");
       return;
     }
     if (!q || q <= 0) {
-      toast("Isi jumlah dengan benar.", "error");
+      swalWarn("Isi jumlah dengan benar.");
       return;
     }
     if (selected.unit === "item" && !Number.isInteger(q)) {
-      toast("Layanan per item harus bilangan bulat.", "error");
+      swalWarn("Layanan per item harus bilangan bulat.");
       return;
     }
     setCart((c) => {
@@ -117,15 +116,15 @@ export default function Kasir() {
   const submit = async (e) => {
     e.preventDefault();
     if (!customer) {
-      toast("Pilih pelanggan dulu.", "error");
+      swalWarn("Pilih pelanggan dulu.");
       return;
     }
     if (cart.length === 0) {
-      toast("Tambahkan minimal satu item.", "error");
+      swalWarn("Tambahkan minimal satu item.");
       return;
     }
     if (method === "cash" && paid < total) {
-      toast("Uang diterima kurang dari total.", "error");
+      swalWarn("Uang diterima kurang dari total.");
       return;
     }
     setBusy(true);
@@ -141,12 +140,12 @@ export default function Kasir() {
         const pay = await api.post("/payments/midtrans", { transactionId: tx.id });
         const url = pay.data?.snap_url;
         if (url && !window.open(url, "_blank", "noopener")) {
-          toast("Popup pembayaran diblokir. Buka tautan dari detail pesanan.", "error");
+          swalErr("Popup pembayaran diblokir. Buka tautan dari detail pesanan.");
         }
       }
       navigate(`/app/pesanan/${tx.id}/nota`);
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }

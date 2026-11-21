@@ -5,6 +5,7 @@ import { api } from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Wave } from "../components/Wave.jsx";
+import { swalErr, swalWarn } from "../lib/swal.js";
 import { useTitle } from "../hooks/useApi.js";
 
 export default function Login() {
@@ -15,16 +16,14 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
-  const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
   if (user) return <Navigate to={location.state?.from || "/app"} replace />;
 
   const submit = async (e) => {
     e.preventDefault();
-    setError("");
     if (!username || !password) {
-      setError("Isi username dan password dulu.");
+      swalWarn("Isi username dan password dulu.");
       return;
     }
     setBusy(true);
@@ -33,7 +32,7 @@ export default function Login() {
       await login(res.data.token, res.data.role, res.data.username);
       navigate(res.data.role === "admin" ? "/app/dashboard" : "/app/kasir", { replace: true });
     } catch (err) {
-      setError(err.message);
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
@@ -52,12 +51,6 @@ export default function Login() {
             </div>
           </div>
           <form className="p-6" onSubmit={submit} noValidate>
-            <div role="alert" className="sr-only">{error}</div>
-            {error && (
-              <p className="mb-4 rounded-[10px] bg-danger-soft px-3 py-2.5 text-sm font-semibold text-danger" role="alert">
-                {error}
-              </p>
-            )}
             <Field label="Username" htmlFor="username">
               <input
                 id="username"

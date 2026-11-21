@@ -5,14 +5,13 @@ import { useApi, useTitle } from "../hooks/useApi.js";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Modal } from "../components/Modal.jsx";
 import { Pagination } from "../components/Pagination.jsx";
-import { useToast } from "../components/Toast.jsx";
+import { swalConfirm, swalErr, swalOk, swalWarn } from "../lib/swal.js";
 import { EmptyState, ErrorState, Loading } from "../components/StateViews.jsx";
 
 const emptyForm = { id: null, fullName: "", phoneNumber: "", email: "" };
 
 export default function Customers() {
   useTitle("Pelanggan: BubbleWash");
-  const toast = useToast();
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
 
@@ -24,7 +23,6 @@ export default function Customers() {
   const { data, meta, loading, error, retry } = useApi(query);
 
   const [form, setForm] = useState(null); // null = tutup, objek = mode edit/tambah
-  const [toDelete, setToDelete] = useState(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -38,29 +36,35 @@ export default function Customers() {
     try {
       if (form.id) {
         await api.put(`/customers/${form.id}`, { fullName: form.fullName, phoneNumber: form.phoneNumber, email: form.email });
-        toast("Data pelanggan diperbarui.");
+        swalOk("Data pelanggan diperbarui.");
       } else {
         await api.post("/customers", { fullName: form.fullName, phoneNumber: form.phoneNumber, email: form.email });
-        toast("Pelanggan ditambahkan.");
+        swalOk("Pelanggan ditambahkan.");
       }
       setForm(null);
       retry();
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
   };
 
-  const remove = async () => {
+  const remove = async (c) => {
+    const ok = await swalConfirm({
+      title: "Hapus pelanggan?",
+      text: `Data ${c.fullName} akan dihapus dari daftar. Pesanan yang sudah ada tetap tersimpan.`,
+      confirmText: "Ya, hapus",
+      danger: true,
+    });
+    if (!ok) return;
     setBusy(true);
     try {
-      await api.del(`/customers/${toDelete.id}`);
-      toast("Pelanggan dihapus.");
-      setToDelete(null);
+      await api.del(`/customers/${c.id}`);
+      await swalOk("Pelanggan dihapus.");
       retry();
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
@@ -138,7 +142,7 @@ export default function Customers() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setToDelete(c)}
+                    onClick={() => remove(c)}
                     aria-label={`Hapus ${c.fullName}`}
                     className="inline-flex min-h-11 items-center gap-1.5 rounded-input px-3 font-semibold text-danger hover:bg-danger-soft"
                   >
@@ -193,33 +197,6 @@ export default function Customers() {
         )}
       </Modal>
 
-      <Modal open={toDelete !== null} onClose={() => setToDelete(null)} title="Hapus pelanggan?">
-        {toDelete && (
-          <div>
-            <p className="text-sm text-muted">
-              Data <span className="font-bold text-ink">{toDelete.fullName}</span> akan dihapus dari daftar. Pesanan yang
-              sudah ada tetap tersimpan.
-            </p>
-            <div className="mt-4 flex gap-2">
-              <button
-                type="button"
-                disabled={busy}
-                onClick={remove}
-                className="min-h-11 flex-1 rounded-input bg-danger px-4 font-bold text-white hover:opacity-90 disabled:opacity-60"
-              >
-                Hapus
-              </button>
-              <button
-                type="button"
-                onClick={() => setToDelete(null)}
-                className="min-h-11 rounded-input border border-line px-4 font-bold text-ink hover:bg-primary-soft"
-              >
-                Batal
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
     </div>
   );
 }

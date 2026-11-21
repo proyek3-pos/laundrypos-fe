@@ -4,39 +4,36 @@ import { api } from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Field, inputClass } from "../components/Field.jsx";
 import { Wave } from "../components/Wave.jsx";
-import { useToast } from "../components/Toast.jsx";
+import { swalErr, swalOk, swalWarn } from "../lib/swal.js";
 import { useTitle } from "../hooks/useApi.js";
 
 export default function Register() {
   useTitle("Daftar: BubbleWash");
   const { user } = useAuth();
   const navigate = useNavigate();
-  const toast = useToast();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
   if (user) return <Navigate to="/app" replace />;
 
   const submit = async (e) => {
     e.preventDefault();
-    setError("");
     if (!username || !password) {
-      setError("Isi username dan password dulu.");
+      swalWarn("Isi username dan password dulu.");
       return;
     }
     if (password.length < 8) {
-      setError("Password minimal 8 karakter.");
+      swalWarn("Password minimal 8 karakter.");
       return;
     }
     setBusy(true);
     try {
       await api.post("/register", { username, password });
-      toast("Registrasi berhasil, silakan masuk.");
+      await swalOk("Registrasi berhasil", "Silakan masuk dengan akun baru kamu.");
       navigate("/login", { replace: true });
     } catch (err) {
-      setError(err.message);
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
@@ -55,11 +52,6 @@ export default function Register() {
             </div>
           </div>
           <form className="p-6" onSubmit={submit} noValidate>
-            {error && (
-              <p className="mb-4 rounded-[10px] bg-danger-soft px-3 py-2.5 text-sm font-semibold text-danger" role="alert">
-                {error}
-              </p>
-            )}
             <Field label="Username" htmlFor="username" hint="3-32 karakter: huruf, angka, underscore">
               <input
                 id="username"

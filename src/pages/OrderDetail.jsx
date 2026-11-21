@@ -4,7 +4,7 @@ import { ArrowLeft, Printer } from "@phosphor-icons/react";
 import { api, formatRp, formatTanggal } from "../api/client.js";
 import { useApi, useTitle } from "../hooks/useApi.js";
 import { inputClass } from "../components/Field.jsx";
-import { useToast } from "../components/Toast.jsx";
+import { swalConfirm, swalErr, swalOk, swalWarn } from "../lib/swal.js";
 import { StatusBadge, STATUS_LABELS } from "../components/StatusBadge.jsx";
 import { ErrorState, Loading } from "../components/StateViews.jsx";
 
@@ -21,7 +21,6 @@ export default function OrderDetail() {
   const { id } = useParams();
   useTitle("Detail pesanan: BubbleWash");
   const { data: tx, loading, error, retry } = useApi(`/transactions/${id}`);
-  const toast = useToast();
 
   const [cashOpen, setCashOpen] = useState(false);
   const [amount, setAmount] = useState("");
@@ -32,13 +31,22 @@ export default function OrderDetail() {
   if (!tx) return null;
 
   const move = async (status) => {
+    if (status === "batal") {
+      const ok = await swalConfirm({
+        title: "Batalkan pesanan?",
+        text: "Pesanan yang dibatalkan tidak bisa dibayar dan tidak bisa lanjut diproses.",
+        confirmText: "Ya, batalkan",
+        danger: true,
+      });
+      if (!ok) return;
+    }
     setBusy(true);
     try {
       await api.patch(`/transactions/${tx.id}/status`, { status });
-      toast(`Status pesanan jadi ${STATUS_LABELS[status]}.`);
+      swalOk(`Status pesanan jadi ${STATUS_LABELS[status]}.`);
       retry();
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
@@ -49,12 +57,12 @@ export default function OrderDetail() {
     setBusy(true);
     try {
       await api.post("/payments/cash", { transactionId: tx.id, amountPaid: Number(amount) });
-      toast("Pembayaran cash dicatat.");
+      swalOk("Pembayaran cash dicatat.");
       setCashOpen(false);
       setAmount("");
       retry();
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
@@ -66,11 +74,11 @@ export default function OrderDetail() {
       const res = await api.post("/payments/midtrans", { transactionId: tx.id });
       const url = res.data?.snap_url;
       if (url && !window.open(url, "_blank", "noopener")) {
-        toast("Popup diblokir browser. Izinkan popup lalu coba lagi.", "error");
+        swalErr("Popup diblokir browser. Izinkan popup lalu coba lagi.");
       }
       retry();
     } catch (err) {
-      toast(err.message, "error");
+      swalErr(err.message);
     } finally {
       setBusy(false);
     }
