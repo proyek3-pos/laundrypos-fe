@@ -1,13 +1,16 @@
 import { swalErr, swalInfo, swalOk } from "./swal.js";
 
 const SNAP_JS_URL =
-  import.meta.env.VITE_SNAP_JS_URL || "https://app.sandbox.midtrans.com/assets/js/snap.js";
+  import.meta.env.VITE_SNAP_JS_URL || "https://app.sandbox.midtrans.com/snap/snap.js";
+const CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY || "";
 
 function loadSnapJs() {
   if (window.snap) return Promise.resolve();
   return new Promise((resolve, reject) => {
     const s = document.createElement("script");
     s.src = SNAP_JS_URL;
+    // Snap menuntut client key di atribut skrip (nilai ini memang publik).
+    s.setAttribute("data-client-key", CLIENT_KEY);
     s.onload = resolve;
     s.onerror = () => reject(new Error("Gagal memuat skrip pembayaran Midtrans."));
     document.body.appendChild(s);
