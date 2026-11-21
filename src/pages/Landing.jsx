@@ -39,7 +39,7 @@ export default function Landing() {
       <header className="no-print sticky top-0 z-30 border-b border-line bg-surface">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-2.5">
-            <img src="/logo.png" alt="Logo LaundryPOS" className="h-8 w-8" width={32} height={32} />
+            <img src={import.meta.env.BASE_URL + "logo.png"} alt="Logo LaundryPOS" className="h-8 w-8" width={32} height={32} />
             <span className="font-extrabold">LaundryPOS</span>
           </div>
           <nav className="flex items-center gap-2" aria-label="Menu beranda">
