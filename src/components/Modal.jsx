@@ -4,16 +4,20 @@ import { X } from "@phosphor-icons/react";
 // Dialog sederhana: tutup dengan Escape atau klik backdrop.
 export function Modal({ open, onClose, title, children, wide }) {
   const panelRef = useRef(null);
+  // onClose dipisah ke ref supaya efek hanya jalan saat open berubah,
+  // bukan setiap re-render (yang akan mencuri fokus dari input form).
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     panelRef.current?.focus();
     return () => document.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 
