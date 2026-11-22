@@ -51,7 +51,7 @@ Toggle fungsional, default light; kedua mode diverifikasi kontrasnya. Alasan (R-
 
 ## Landing page: tema owner-supplied (mockup BubbleWash, 2026-11-22)
 
-Landing memakai 3 tema pilihan owner (Sky Mint default, Terracotta, Midnight) lewat switcher kanan-bawah; pilihan tersimpan di localStorage.
+Landing memakai tema Sky Mint sebagai satu-satunya tema (keputusan owner, 2026-11-22: switcher 3 tema dihapus, Terracotta/Midnight tidak dilanjutkan).
 
 - Gradient hero/CTA dan pola titik di banner CTA: bagian identitas mockup owner (R-01/R-07, alasan tertulis), bukan gradient default; stop CTA digelapkan (mis. #0369A1/#047857) supaya teks putih lolos AA.
 - Difilter antislop dari mockup: badge eyebrow "Tema:" + titik pulse di atas H1 (R-09/R-31), animasi float tak berujung pada kartu hero (R-19), glow di semua tombol (R-13, hanya CTA utama). Modal simulasi kasir + form auth palsu tidak dibuat: kasir asli ada di app (R-26/R-38).

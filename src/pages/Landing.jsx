@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
   CheckCircle,
   ClipboardText,
-  Palette,
   Printer,
   Scales,
   Stack,
@@ -59,12 +57,6 @@ const STEPS = [
   },
 ];
 
-const THEMES = [
-  { key: "sky", label: "Sky Mint", dot: "from-[#0284C7] to-[#10B981]" },
-  { key: "terracotta", label: "Terracotta", dot: "from-[#EA580C] to-[#4D7C0F]" },
-  { key: "midnight", label: "Midnight", dot: "from-[#0F172A] to-[#38BDF8]" },
-];
-
 const iconBox = (tone) =>
   tone === "mint"
     ? "bg-[var(--lw-mint-soft)] text-[var(--lw-mint)]"
@@ -72,14 +64,8 @@ const iconBox = (tone) =>
 
 export default function Landing() {
   useTitle("BubbleWash: kasir laundry yang ringan dipakai");
-  const [theme, setTheme] = useState(() => localStorage.getItem("bw-ltheme") || "sky");
-  const pick = (t) => {
-    setTheme(t);
-    localStorage.setItem("bw-ltheme", t);
-  };
-
   return (
-    <div data-ltheme={theme} className="min-h-dvh bg-[var(--lw-bg)] text-[var(--lw-ink)]">
+    <div data-ltheme="sky" className="min-h-dvh bg-[var(--lw-bg)] text-[var(--lw-ink)]">
       <header className="lw-t sticky top-0 z-40 border-b border-[var(--lw-line)] bg-[var(--lw-surface)]/85 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-3">
@@ -316,37 +302,6 @@ export default function Landing() {
         </div>
       </footer>
 
-      {/* Pemilih tema: fungsi nyata, tema aktif ditandai ring */}
-      <div className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6">
-        <div
-          role="group"
-          aria-label="Pilih tema tampilan"
-          className="lw-t flex items-center gap-1.5 rounded-2xl border border-[var(--lw-line)] bg-[var(--lw-surface)]/95 p-2 shadow-2xl backdrop-blur-md"
-        >
-          <span className="hidden items-center gap-1.5 pl-2 pr-1 text-[11px] font-bold text-[var(--lw-muted)] md:inline-flex">
-            <Palette size={14} className="text-[var(--lw-primary-ink)]" aria-hidden="true" />
-            <span>Tema:</span>
-          </span>
-          {THEMES.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              onClick={() => pick(t.key)}
-              title={t.label}
-              aria-pressed={theme === t.key}
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all ${
-                theme === t.key
-                  ? "bg-[var(--lw-primary-soft)] text-[var(--lw-primary-ink)] ring-1 ring-[var(--lw-primary)]"
-                  : "text-[var(--lw-muted)] hover:bg-[var(--lw-subtle)] hover:text-[var(--lw-ink)]"
-              }`}
-            >
-              <span className={`h-3 w-3 rounded-full bg-gradient-to-tr ${t.dot}`} aria-hidden="true" />
-              <span className="hidden sm:inline">{t.label}</span>
-              <span className="sr-only">{t.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
