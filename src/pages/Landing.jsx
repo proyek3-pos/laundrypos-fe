@@ -4,6 +4,7 @@ import {
   CheckCircle,
   ClipboardText,
   Printer,
+  Receipt,
   Scales,
   Stack,
   UserCheck,
