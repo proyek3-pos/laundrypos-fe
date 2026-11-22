@@ -48,3 +48,12 @@ Toggle fungsional, default light; kedua mode diverifikasi kontrasnya. Alasan (R-
 - Tanpa testimonial atau statistik palsu (R-17/R-18); landing hanya klaim yang bisa diverifikasi.
 - KPI dashboard hanya dari `GET /reports/summary`, tanpa delta yang tidak dihitung dari data.
 - Empty state menyebut penyebab dan aksi berikutnya, bukan sekadar "Tidak ada data".
+
+## Landing page: tema owner-supplied (mockup BubbleWash, 2026-11-22)
+
+Landing memakai 3 tema pilihan owner (Sky Mint default, Terracotta, Midnight) lewat switcher kanan-bawah; pilihan tersimpan di localStorage.
+
+- Gradient hero/CTA dan pola titik di banner CTA: bagian identitas mockup owner (R-01/R-07, alasan tertulis), bukan gradient default; stop CTA digelapkan (mis. #0369A1/#047857) supaya teks putih lolos AA.
+- Difilter antislop dari mockup: badge eyebrow "Tema:" + titik pulse di atas H1 (R-09/R-31), animasi float tak berujung pada kartu hero (R-19), glow di semua tombol (R-13, hanya CTA utama). Modal simulasi kasir + form auth palsu tidak dibuat: kasir asli ada di app (R-26/R-38).
+- Ikon tetap Phosphor demi konsistensi dengan app; glyph relevan per fitur (R-04).
+- Kontras ketiga tema diverifikasi contrast-check.py; pasangan terendah 4.60 (R-25). Midnight berfungsi sebagai mode gelap landing (R-21/R-34).

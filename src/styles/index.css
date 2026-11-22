@@ -79,6 +79,95 @@
   }
 }
 
+/* ===== Landing: 3 tema milik owner (mockup BubbleWash, 2026-11-22) =====
+   Kontras tiap pasangan diverifikasi contrast-check.py (R-25). */
+[data-ltheme="sky"] {
+  --lw-bg: #f8fafc;
+  --lw-surface: #ffffff;
+  --lw-subtle: #f1f5f9;
+  --lw-hero: linear-gradient(180deg, #e0f2fe 0%, #f0fdf4 55%, #f8fafc 100%);
+  --lw-line: #e2e8f0;
+  --lw-ink: #0f172a;
+  --lw-muted: #475569;
+  --lw-btn-bg: #0284c7;
+  --lw-btn-hover: #0369a1;
+  --lw-btn-ink: #ffffff;
+  --lw-primary: #0284c7;
+  --lw-primary-ink: #075985;
+  --lw-primary-soft: #e0f2fe;
+  --lw-mint: #047857;
+  --lw-mint-soft: #d1fae5;
+  --lw-cta: linear-gradient(135deg, #0369a1 0%, #0284c7 55%, #047857 100%);
+  --lw-cta-ink: #ffffff;
+  --lw-cta-btn: #ffffff;
+  --lw-cta-btn-ink: #0369a1;
+  --lw-shadow-card: 0 12px 32px -6px rgba(2, 132, 199, 0.12);
+}
+
+[data-ltheme="terracotta"] {
+  --lw-bg: #fdfbf7;
+  --lw-surface: #fffdf9;
+  --lw-subtle: #f5efe6;
+  --lw-hero: linear-gradient(180deg, #ffedd5 0%, #fef3c7 45%, #fdfbf7 100%);
+  --lw-line: #e7e5e4;
+  --lw-ink: #292524;
+  --lw-muted: #57534e;
+  --lw-btn-bg: #c2410c;
+  --lw-btn-hover: #9a3412;
+  --lw-btn-ink: #ffffff;
+  --lw-primary: #ea580c;
+  --lw-primary-ink: #9a3412;
+  --lw-primary-soft: #ffedd5;
+  --lw-mint: #4d7c0f;
+  --lw-mint-soft: #ecfccb;
+  --lw-cta: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+  --lw-cta-ink: #fffbeb;
+  --lw-cta-btn: #fffbeb;
+  --lw-cta-btn-ink: #9a3412;
+  --lw-shadow-card: 0 12px 32px -6px rgba(234, 88, 12, 0.12);
+}
+
+[data-ltheme="midnight"] {
+  --lw-bg: #0f172a;
+  --lw-surface: #1e293b;
+  --lw-subtle: #0b1120;
+  --lw-hero: radial-gradient(circle at top right, rgba(56, 189, 248, 0.16), transparent 50%),
+    radial-gradient(circle at bottom left, rgba(52, 211, 153, 0.12), transparent 50%), #0f172a;
+  --lw-line: #334155;
+  --lw-ink: #f8fafc;
+  --lw-muted: #94a3b8;
+  --lw-btn-bg: #38bdf8;
+  --lw-btn-hover: #0ea5e9;
+  --lw-btn-ink: #0f172a;
+  --lw-primary: #38bdf8;
+  --lw-primary-ink: #7dd3fc;
+  --lw-primary-soft: rgba(56, 189, 248, 0.15);
+  --lw-mint: #34d399;
+  --lw-mint-soft: rgba(52, 211, 153, 0.15);
+  --lw-cta: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  --lw-cta-ink: #f8fafc;
+  --lw-cta-btn: #38bdf8;
+  --lw-cta-btn-ink: #0f172a;
+  --lw-shadow-card: 0 16px 36px -8px rgba(0, 0, 0, 0.55);
+}
+
+.lw-hero {
+  background: var(--lw-hero);
+}
+.lw-cta {
+  background: var(--lw-cta);
+}
+.lw-card-shadow {
+  box-shadow: var(--lw-shadow-card);
+}
+.lw-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+[data-ltheme] .lw-t {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
 @media print {
   /* Halaman nota dicetak bersih tanpa chrome aplikasi, lebar thermal 80mm.
      Token tema di-reset ke light: di mode gelap teksnya nyaris putih di kertas. */
