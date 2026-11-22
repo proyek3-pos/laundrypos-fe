@@ -268,7 +268,7 @@ export default function Landing() {
             </div>
 
             <div className="mt-14 sm:mt-20">
-              <div className="lw-cta lw-dots relative overflow-hidden rounded-3xl border border-[var(--lw-line)] px-6 py-12 text-center sm:px-12 sm:py-16">
+              <div className="lw-cta relative overflow-hidden rounded-3xl border border-[var(--lw-line)] px-6 py-12 text-center sm:px-12 sm:py-16">
                 <div className="relative z-10 mx-auto max-w-xl">
                   <h2 className="mb-3 text-2xl font-extrabold tracking-tight text-[var(--lw-cta-ink)] sm:text-3xl">
                     Siap buka kasir hari ini?

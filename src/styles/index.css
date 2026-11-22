@@ -108,14 +108,13 @@
   background: var(--lw-hero);
 }
 .lw-cta {
-  background: var(--lw-cta);
+  /* dots + gradient dalam satu elemen: layer atas dots, bawah gradient */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px),
+    var(--lw-cta);
+  background-size: 24px 24px, cover;
 }
 .lw-card-shadow {
   box-shadow: var(--lw-shadow-card);
-}
-.lw-dots {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
 }
 [data-ltheme] .lw-t {
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
